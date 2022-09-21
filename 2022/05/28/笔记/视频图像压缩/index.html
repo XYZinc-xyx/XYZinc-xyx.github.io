@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="多媒体技术笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="视频图像压缩">
+<meta property="og:url" content="http://example.com/2022/05/28/%E7%AC%94%E8%AE%B0/%E8%A7%86%E9%A2%91%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9/index.html">
+<meta property="og:site_name" content="XYZinc&#39;s blog">
+<meta property="og:description" content="多媒体技术笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205100930121.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205100934897.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205281508420.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205281618774.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205281724425.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205291934229.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205291934667.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205291949004.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205291949562.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205291955627.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205292002644.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205292020682.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205301940400.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311056824.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311114485.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311117773.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311119110.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311119315.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311124307.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311126439.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311127743.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311522292.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311526441.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311528563.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311530513.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311549246.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311552163.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311554801.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311555984.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311558380.png">
+<meta property="article:published_time" content="2022-05-28T07:33:01.580Z">
+<meta property="article:modified_time" content="2022-05-31T08:16:23.969Z">
+<meta property="article:author" content="XYZinc">
+<meta property="article:tag" content="多媒体">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205100930121.png">
+
+<link rel="canonical" href="http://example.com/2022/05/28/%E7%AC%94%E8%AE%B0/%E8%A7%86%E9%A2%91%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>视频图像压缩 | XYZinc's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">XYZinc's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/28/%E7%AC%94%E8%AE%B0/%E8%A7%86%E9%A2%91%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/XYZinc.png">
+      <meta itemprop="name" content="XYZinc">
+      <meta itemprop="description" content="⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XYZinc's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          视频图像压缩
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-28 15:33:01" itemprop="dateCreated datePublished" datetime="2022-05-28T15:33:01+08:00">2022-05-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-31 16:16:23" itemprop="dateModified" datetime="2022-05-31T16:16:23+08:00">2022-05-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">多媒体技术笔记</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="视频图像压缩基础"><a href="#视频图像压缩基础" class="headerlink" title="视频图像压缩基础"></a>视频图像压缩基础</h1><h2 id="人眼视觉特性"><a href="#人眼视觉特性" class="headerlink" title="人眼视觉特性"></a>人眼视觉特性</h2><ul>
+<li><p>人眼的光谱灵敏度：暗环境下，人眼时候去感觉彩色的能力，仅能辨别白色和灰色</p>
+</li>
+<li><p>视觉的亮度适应性：明适应（暗-&gt;亮）；暗适应（亮-&gt;暗）；人眼能通过调节感光灵敏度来适应范围很广的亮度；人眼对目标亮度的感知更多依赖于目标和背景之间的<strong>亮度差</strong></p>
+</li>
+<li><p>“马赫”带：视觉系统往往会在不同强度区域的边界处出现“下冲”或“上冲”现象</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205100930121.png" width="250"></p>
+</li>
+<li><p>侧抑制：某个感光细胞受到光线刺激时，若它的相邻感光细胞再受到刺激，则它的反应会减弱</p>
+</li>
+<li><p>几何错觉：眼睛填充了不存在的信息或者错误的感知了物体的几何特点</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205100934897.png" width="400"></p>
+</li>
+<li><p>视觉关注度</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205281508420.png" width="350"></p>
+</li>
+</ul>
+<h2 id="视频压缩哪些环节考虑了人眼视觉特性"><a href="#视频压缩哪些环节考虑了人眼视觉特性" class="headerlink" title="视频压缩哪些环节考虑了人眼视觉特性"></a>视频压缩哪些环节考虑了人眼视觉特性</h2><ul>
+<li><p>YCrBr：人眼对亮度更敏感，所以压缩时优先损失色彩</p>
+</li>
+<li><p>量化编码：人眼更关注低频信息，低频信息比高频更重要</p>
+</li>
+<li><p>视频帧率20-30FPS：视觉暂留</p>
+</li>
+<li><p>后滤波处理：对压缩解码后的图像做后滤波处理，使边界平滑</p>
+</li>
+<li><p>视觉关注度：关注区域清晰一些，背景区域模糊一些</p>
+</li>
+<li><p>用假纹理替代水波纹、草地等信息</p>
+</li>
+<li><p>降低分辨率时，优先降低量化分辨率而不是空间分辨率（颜色失真相比图片模糊更能被接受）</p>
+</li>
+<li><p>量化步长</p>
+</li>
+</ul>
+<h2 id="色彩模型"><a href="#色彩模型" class="headerlink" title="色彩模型"></a><a target="_blank" rel="noopener" href="https://xyzinc-xyx.github.io/2022/04/11/%E7%AC%94%E8%AE%B0/%E8%89%B2%E5%BD%A9%E6%A8%A1%E5%9E%8B/">色彩模型</a></h2><ul>
+<li><p>RGB</p>
+</li>
+<li><p>HSI</p>
+</li>
+<li><p>YCbCr</p>
+</li>
+</ul>
+<h2 id="数据压缩"><a href="#数据压缩" class="headerlink" title="数据压缩"></a>数据压缩</h2><p><strong>压缩的本质：去冗余</strong></p>
+<ol>
+<li><p>评价指标</p>
+<p> 压缩的评价指标：<strong>压缩比、失真度（有损压缩才存在失真）、计算复杂度</strong></p>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205281618774.png" width="380"></p>
+</li>
+<li><p>标准化</p>
+<p> 对于任何形式的通信来说，只有当信息的<strong>发送方和接受方都能够理解编码机制</strong>的时候压缩数据通信才能够工作。</p>
+<p> 因此数据压缩算法必须<strong>标准化</strong>，制定并遵循技术标准。如图像压缩标准JPEG系列、视频压缩标准MPEG系列等。</p>
+</li>
+</ol>
+<h1 id="数据压缩基本方法"><a href="#数据压缩基本方法" class="headerlink" title="数据压缩基本方法"></a>数据压缩基本方法</h1><h2 id="游程编码"><a href="#游程编码" class="headerlink" title="游程编码"></a>游程编码</h2><ol>
+<li><p>思想</p>
+<p> 如果数据项d在输入流中出现n次，则以单个字符对nd替换n次出现者。这个连续出现的数据项叫做游程n，这种数据压缩方法称为游程编码或RLE。</p>
+<blockquote>
+<p>eg. all is too well -&gt; a2l is t2o we2l<br>如何区分原字符串中的数字？在重复部分前缀一个特殊的提示字符<br>a@2l is t@2o we@2l</p>
+</blockquote>
+</li>
+<li><p>压缩比</p>
+<p> 假设待压缩字符串长度为N，字符串中包含M次重复，每次重复的平均长度为L。M次中的每一次重复可用3字节代替，因此，压缩后字符串的长度为N-M(L-3)，压缩因子为</p>
+<script type="math/tex; mode=display">
+N/(N-M(L-3))</script></li>
+<li><p>适用场景</p>
+<p> RLE图像压缩基于这样的事实：如果我们在该图像中随机选择一个像素，其相邻像素色彩相同的可能性很大，因此压缩器逐行扫描位图，搜索色彩相同像素的游程。</p>
+<blockquote>
+<p>二值、灰度、彩色图像中，采用游程编码压缩效率最高的是：<strong>二值</strong></p>
+</blockquote>
+</li>
+</ol>
+<h2 id="熵编码-统计编码"><a href="#熵编码-统计编码" class="headerlink" title="熵编码/统计编码"></a>熵编码/统计编码</h2><h3 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h3><ol>
+<li><p>熵：信息的度量</p>
+</li>
+<li><p>变长码：不同于等长编码，变长编码通过可变的字节数表示不同的字符。</p>
+<blockquote>
+<p>变长码遵循的规则</p>
+<ul>
+<li>把短码赋给出现频率高的字符；</li>
+<li>遵循前缀性</li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<h3 id="香农-费诺编码"><a href="#香农-费诺编码" class="headerlink" title="香农-费诺编码"></a>香农-费诺编码</h3><ol>
+<li>按概率把符号从大到小排序</li>
+<li>将这些符号划分成概率几乎相同的两个子集</li>
+<li>一个子集以０开始，另一个以１开始</li>
+<li><p>再按照同样的步骤划分这两个子集，一直到子集不能被划分</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205281724425.png" width="430"></p>
+</li>
+</ol>
+<h3 id="哈夫曼编码"><a href="#哈夫曼编码" class="headerlink" title="哈夫曼编码"></a>哈夫曼编码</h3><ol>
+<li><p>步骤</p>
+<ul>
+<li>信源符号按概率分布大小，以递减次序排列；</li>
+<li>取两个<strong>最小的概率</strong>，分别赋以“0”,“1”；然后把这两个概率值相加，作为新概率值与其他概率重新排序</li>
+<li>按重排概率值，重复上述操作，直到概率和为1</li>
+<li><p>由后向前排列码序，即得到哈夫曼编码</p>
+<p>  <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205291934229.png" width="430"></p>
+<p>  <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205291934667.png" width="380"></p>
+</li>
+<li><p>由于哈夫曼编码码长不等，存在一个输入与输出的速率匹配问题。解决的办法是设置一定容量的缓冲寄存器。<strong>码方差越小，速率匹配的难度越低。</strong></p>
+</li>
+</ul>
+</li>
+<li><p>合并方法的比较</p>
+<p> 由上图可知哈夫曼编码过程编出的最佳码不是唯一的，但其平均码长是一样的，其中<strong>码方差最小者最佳</strong>。因此在哈夫曼编码过程中，合并后的新符号应当排在其它相同概率符号的上面。（码方差小，编码机会更均等，数据波动少）</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205291949004.png" width="430"></p>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205291949562.png" width="210"></p>
+</li>
+<li><p>码长的波动实质上是<strong>编码机会</strong>的波动</p>
+</li>
+<li><p>解码</p>
+<p> 哈夫曼解码：哈夫曼树叶子节点的搜索</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205291955627.png" width="400"></p>
+</li>
+<li><p>N进制哈夫曼编码</p>
+<p> 和二进制思路基本相同，需要注意的有：</p>
+<ul>
+<li>每次取最小的$n$个概率，赋为0, 1, …, n -1</li>
+<li><p>信源符号个数$r$需满足$r=(n-1)k+n$，不足时补充对应数量的概率为0的符号</p>
+<p>eg.四元哈夫曼编码：<br><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205292002644.png" width="500"></p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="算数编码"><a href="#算数编码" class="headerlink" title="算数编码"></a>算数编码</h3><ol>
+<li><p>思想</p>
+<p> Huffman编码中<strong>每个符号</strong>都用整数个bits来表示，影响编码效率。</p>
+<p> 若能把<strong>一串符号</strong>作为编码单位，则效率还可提高。</p>
+<p> 待编码的符号串可以映射成为[0, 1)中唯一的一个区间</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205292020682.png" width="470"></p>
+</li>
+<li><p>编码过程</p>
+<ul>
+<li>首先定义两个变量：<script type="math/tex">Low=0, High=1</script></li>
+<li><p>当读入和处理信源符号A时，更新Low，High：</p>
+<script type="math/tex; mode=display">NewHigh = OldLow + Range \times HighRange(A)</script><script type="math/tex; mode=display">NewLow = OldLow + Range \times LowRange(A)</script><p>其中，$Range=OldHigh-OldLow$，$LowRange(A), HighRange(A)$分别表示A对应区域的上下限。</p>
+</li>
+<li><p>注：若题目没有告知全局概率，用局部概率替代</p>
+</li>
+</ul>
+</li>
+<li><p>解码</p>
+<ul>
+<li><p>根据符号即其区间，重构概率和频率表</p>
+</li>
+<li><p>根据编码结果$code$所在的区间，可以判断第一个符号所在的区间$s$</p>
+</li>
+<li><p>更新$code$，<script type="math/tex">code = \frac{code - LowRange(s)}{Range(s)}</script>，以消除符号$s$对码字的影响</p>
+</li>
+<li><p>重复以上操作直至结束</p>
+</li>
+</ul>
+</li>
+<li><p>算术解码结束的判定</p>
+<p> 若以某值（LowRange/HighRange等）为解码结束条件，当输入流中最后一个符号恰好为此值时，会出现还未对其解码就提前结束的情况。</p>
+<p> 正确的解决方法是加入eof等符号，并把它以很小的概率加入到概率表中,编码时,把它作为最后一个字符编码到输入流中,当解码时,解码出eof认为解码过程结束</p>
+</li>
+</ol>
+<h2 id="字典编码"><a href="#字典编码" class="headerlink" title="字典编码"></a>字典编码</h2><p>此前的编码方法中，大多假设符号是独立的，但实际中许多常见的数据类型并非如此，例如：文本、图像和源代码文件等。</p>
+<ol>
+<li><p>思想</p>
+<ul>
+<li><p>字典编码的思路：根据数据本身包含有重复代码的特性</p>
+</li>
+<li><p>标识经常出现的符号模式 —— 保存于字典中</p>
+</li>
+<li><p>对这些常出现的模式采用更有效的编码方式 —— 用其在字典中的索引作为码字；而对其它部分采用缺省（不太有效）的编码方式。以期总的编码效率更高</p>
+</li>
+<li><p>显然，<strong>字典编码的高效率对于有规律信源（例如文本）较为合理，而对随机数据无效</strong></p>
+</li>
+</ul>
+</li>
+<li><p>静态字典</p>
+<p> 静态字典适用于对信源的结构有足够的先验知识时，利用先验知识构造字典。</p>
+<p> 对对针对其设计的特定应用和数据有效。（例如电话号码的区号、学校的学生信息表等）</p>
+</li>
+<li><p>自适应字典</p>
+<p> 许多情况下事先不知道待编码数据的统计特性，无法预先构造静态字典。</p>
+<p> 自适应字典可以根据待编码数据动态地形成字典，常见的自适应字典编码有：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://xyzinc-xyx.github.io/2022/05/30/%E7%AC%94%E8%AE%B0/%E5%B8%B8%E8%A7%81%E5%AD%97%E5%85%B8%E7%BC%96%E7%A0%81/">字典编码</a></p>
+<ul>
+<li><p>LZ77</p>
+</li>
+<li><p>LZ78</p>
+</li>
+<li><p>LZW</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="视频图像压缩方法"><a href="#视频图像压缩方法" class="headerlink" title="视频图像压缩方法"></a>视频图像压缩方法</h1><h2 id="视频压缩的可行性"><a href="#视频压缩的可行性" class="headerlink" title="视频压缩的可行性"></a>视频压缩的可行性</h2><ul>
+<li><p>视频压缩的基本依据</p>
+<ul>
+<li>空间冗余</li>
+<li>频率冗余</li>
+<li>视觉冗余</li>
+<li>熵冗余</li>
+<li>时间冗余</li>
+</ul>
+</li>
+<li><p>视频压缩的基本方法</p>
+<ul>
+<li>帧内预测编码</li>
+<li>变换编码</li>
+<li>量化编码</li>
+<li>熵编码</li>
+<li><p>帧间预测编码</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205301940400.png" width="420"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="时间-空间冗余——帧间预测编码"><a href="#时间-空间冗余——帧间预测编码" class="headerlink" title="时间/空间冗余——帧间预测编码"></a><a href>时间/空间冗余——帧间预测编码</a></h2><p>时间上视频信息的相似性、相关性称为时间冗余</p>
+<h2 id="频率冗余——变换编码"><a href="#频率冗余——变换编码" class="headerlink" title="频率冗余——变换编码"></a>频率冗余——变换编码</h2><p>在空间域中，能量倾向于均匀地分布；而在频率域中，能量集中到少数几个“重要”的数据上<br><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311056824.png" width="400"></p>
+<h3 id="傅里叶变换"><a href="#傅里叶变换" class="headerlink" title="傅里叶变换"></a>傅里叶变换</h3><p>任何周期函数都可以表示为不同频率的正弦或余弦的加权和的形式</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311114485.png" width="480"></p>
+<h3 id="基图像"><a href="#基图像" class="headerlink" title="基图像"></a>基图像</h3><ul>
+<li><p>DCT （Discrete Cosine Transform）变换，即离散余弦变换。在目前的多数图像和视频压缩标准中都用到了DCT技术。</p>
+</li>
+<li><p>DCT变换特点：</p>
+<p>  （1）无虚数部分；</p>
+<p>  （2）正反变换核一样</p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311117773.png" width="250"></p>
+<p>竖条纹表示竖方向上频率为0</p>
+<h3 id="空域与频域图像"><a href="#空域与频域图像" class="headerlink" title="空域与频域图像"></a>空域与频域图像</h3><p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311119110.png" width="450"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311119315.png" width="450"></p>
+<h3 id="变换编码"><a href="#变换编码" class="headerlink" title="变换编码"></a>变换编码</h3><ul>
+<li><p>能够实现对能量的压缩，将能量集中到少数几个“重要”的数据上</p>
+</li>
+<li><p>低频（基本信息）权重系数大</p>
+</li>
+<li><p>高频（细节信息）权重系数小</p>
+</li>
+<li><p>变换的基本单元：8×8 像素块</p>
+</li>
+</ul>
+<h2 id="视觉冗余——量化编码"><a href="#视觉冗余——量化编码" class="headerlink" title="视觉冗余——量化编码"></a>视觉冗余——量化编码</h2><p>视觉系统是非均匀和非线性的，对不同的变化感知程度不同。<strong>对低频信息（基本信息）感知程度较强；对高频信息（细节信息）感知程度较弱</strong></p>
+<p>频域低通滤波——平滑；频域高通滤波——锐化</p>
+<h3 id="量化编码"><a href="#量化编码" class="headerlink" title="量化编码"></a>量化编码</h3><p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311124307.png" width="500"></p>
+<h3 id="DCT编码失真"><a href="#DCT编码失真" class="headerlink" title="DCT编码失真"></a>DCT编码失真</h3><p>DCT 本身没有失真，是可逆变换，如果计算精度保证的话，变换前后的结果是一样的。</p>
+<ul>
+<li><p>基于DCT 变换的分块量化导致失真：</p>
+<ul>
+<li><p>块效应：变换编码是一种块结构编码方法，易出现块与块间的不连续性。</p>
+<p>  <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311126439.png" width="350"></p>
+</li>
+<li><p>蚊式噪声：看起来像某种围绕物体与背景之间高频分界(在前景物体与背景之间形成的尖锐跳变)的朦胧的东西或闪光体。</p>
+<p>  <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311127743.png" width="300"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="视频压缩"><a href="#视频压缩" class="headerlink" title="视频压缩"></a>视频压缩</h1><h2 id="视频压缩流程"><a href="#视频压缩流程" class="headerlink" title="视频压缩流程"></a>视频压缩流程</h2><blockquote>
+<p>帧差图像为什么要通过正反DCT变换、量化和反量化过程，而不是直接传过来？<br>因为解码端得不到无损的原始帧，只能得到有损的图像；编码端要跟解码端保持一致</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311522292.png" width="900"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311526441.png" width="900"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311528563.png" width="900"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311530513.png" width="450"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311549246.png" width="900"></p>
+<h2 id="视频解压缩流程"><a href="#视频解压缩流程" class="headerlink" title="视频解压缩流程"></a>视频解压缩流程</h2><p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311552163.png" width="900"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311554801.png" width="900"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311555984.png" width="450"></p>
+<h2 id="视频码流结构"><a href="#视频码流结构" class="headerlink" title="视频码流结构"></a>视频码流结构</h2><p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311558380.png" width="900"></p>
+<h1 id="视频图像编码标准"><a href="#视频图像编码标准" class="headerlink" title="视频图像编码标准"></a>视频图像编码标准</h1>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%9A%E5%AA%92%E4%BD%93/" rel="tag"># 多媒体</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/22/leetcode%E5%88%B7%E9%A2%98/" rel="prev" title="leetcode刷题记录">
+      <i class="fa fa-chevron-left"></i> leetcode刷题记录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/05/30/%E7%AC%94%E8%AE%B0/%E5%AD%97%E5%85%B8%E7%BC%96%E7%A0%81/" rel="next" title="字典编码">
+      字典编码 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">视频图像压缩基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%BA%E7%9C%BC%E8%A7%86%E8%A7%89%E7%89%B9%E6%80%A7"><span class="nav-number">1.1.</span> <span class="nav-text">人眼视觉特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E5%93%AA%E4%BA%9B%E7%8E%AF%E8%8A%82%E8%80%83%E8%99%91%E4%BA%86%E4%BA%BA%E7%9C%BC%E8%A7%86%E8%A7%89%E7%89%B9%E6%80%A7"><span class="nav-number">1.2.</span> <span class="nav-text">视频压缩哪些环节考虑了人眼视觉特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%89%B2%E5%BD%A9%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">色彩模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9"><span class="nav-number">1.4.</span> <span class="nav-text">数据压缩</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9%E5%9F%BA%E6%9C%AC%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">数据压缩基本方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%B8%E7%A8%8B%E7%BC%96%E7%A0%81"><span class="nav-number">2.1.</span> <span class="nav-text">游程编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%86%B5%E7%BC%96%E7%A0%81-%E7%BB%9F%E8%AE%A1%E7%BC%96%E7%A0%81"><span class="nav-number">2.2.</span> <span class="nav-text">熵编码&#x2F;统计编码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="nav-number">2.2.1.</span> <span class="nav-text">基础概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%99%E5%86%9C-%E8%B4%B9%E8%AF%BA%E7%BC%96%E7%A0%81"><span class="nav-number">2.2.2.</span> <span class="nav-text">香农-费诺编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81"><span class="nav-number">2.2.3.</span> <span class="nav-text">哈夫曼编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%95%B0%E7%BC%96%E7%A0%81"><span class="nav-number">2.2.4.</span> <span class="nav-text">算数编码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E5%85%B8%E7%BC%96%E7%A0%81"><span class="nav-number">2.3.</span> <span class="nav-text">字典编码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">视频图像压缩方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%9A%84%E5%8F%AF%E8%A1%8C%E6%80%A7"><span class="nav-number">3.1.</span> <span class="nav-text">视频压缩的可行性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E9%97%B4-%E7%A9%BA%E9%97%B4%E5%86%97%E4%BD%99%E2%80%94%E2%80%94%E5%B8%A7%E9%97%B4%E9%A2%84%E6%B5%8B%E7%BC%96%E7%A0%81"><span class="nav-number">3.2.</span> <span class="nav-text">时间&#x2F;空间冗余——帧间预测编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%91%E7%8E%87%E5%86%97%E4%BD%99%E2%80%94%E2%80%94%E5%8F%98%E6%8D%A2%E7%BC%96%E7%A0%81"><span class="nav-number">3.3.</span> <span class="nav-text">频率冗余——变换编码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2"><span class="nav-number">3.3.1.</span> <span class="nav-text">傅里叶变换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E5%9B%BE%E5%83%8F"><span class="nav-number">3.3.2.</span> <span class="nav-text">基图像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E5%9F%9F%E4%B8%8E%E9%A2%91%E5%9F%9F%E5%9B%BE%E5%83%8F"><span class="nav-number">3.3.3.</span> <span class="nav-text">空域与频域图像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E6%8D%A2%E7%BC%96%E7%A0%81"><span class="nav-number">3.3.4.</span> <span class="nav-text">变换编码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E8%A7%89%E5%86%97%E4%BD%99%E2%80%94%E2%80%94%E9%87%8F%E5%8C%96%E7%BC%96%E7%A0%81"><span class="nav-number">3.4.</span> <span class="nav-text">视觉冗余——量化编码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8F%E5%8C%96%E7%BC%96%E7%A0%81"><span class="nav-number">3.4.1.</span> <span class="nav-text">量化编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DCT%E7%BC%96%E7%A0%81%E5%A4%B1%E7%9C%9F"><span class="nav-number">3.4.2.</span> <span class="nav-text">DCT编码失真</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9"><span class="nav-number">4.</span> <span class="nav-text">视频压缩</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E6%B5%81%E7%A8%8B"><span class="nav-number">4.1.</span> <span class="nav-text">视频压缩流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E8%A7%A3%E5%8E%8B%E7%BC%A9%E6%B5%81%E7%A8%8B"><span class="nav-number">4.2.</span> <span class="nav-text">视频解压缩流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E7%A0%81%E6%B5%81%E7%BB%93%E6%9E%84"><span class="nav-number">4.3.</span> <span class="nav-text">视频码流结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%9B%BE%E5%83%8F%E7%BC%96%E7%A0%81%E6%A0%87%E5%87%86"><span class="nav-number">5.</span> <span class="nav-text">视频图像编码标准</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="XYZinc"
+      src="/images/XYZinc.png">
+  <p class="site-author-name" itemprop="name">XYZinc</p>
+  <div class="site-description" itemprop="description">⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/XYZinc-xyx" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;XYZinc-xyx" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/XYZinc/" title="cnblogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;XYZinc&#x2F;" rel="noopener" target="_blank"><i class="fa fa-compass fa-fw"></i>cnblogs</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      friend_links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dextertyw.github.io/" title="https:&#x2F;&#x2F;dextertyw.github.io&#x2F;" rel="noopener" target="_blank">Tyw_ei</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://anoxiacxy.github.io/" title="https:&#x2F;&#x2F;anoxiacxy.github.io&#x2F;" rel="noopener" target="_blank">Anoxiacxy</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://skylark1003.gitee.io/" title="https:&#x2F;&#x2F;skylark1003.gitee.io&#x2F;" rel="noopener" target="_blank">Skylark</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XYZinc</span>
+</div>
+
+
+<!-- 底部的强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

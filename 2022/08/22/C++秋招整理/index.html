@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="C++秋招整理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++秋招整理">
+<meta property="og:url" content="http://example.com/2022/08/22/C++%E7%A7%8B%E6%8B%9B%E6%95%B4%E7%90%86/index.html">
+<meta property="og:site_name" content="XYZinc&#39;s blog">
+<meta property="og:description" content="C++秋招整理">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-08-22T14:39:26.103Z">
+<meta property="article:modified_time" content="2022-09-19T07:54:46.736Z">
+<meta property="article:author" content="XYZinc">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/08/22/C++%E7%A7%8B%E6%8B%9B%E6%95%B4%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>C++秋招整理 | XYZinc's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">XYZinc's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/22/C++%E7%A7%8B%E6%8B%9B%E6%95%B4%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/XYZinc.png">
+      <meta itemprop="name" content="XYZinc">
+      <meta itemprop="description" content="⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XYZinc's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++秋招整理
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-22 22:39:26" itemprop="dateCreated datePublished" datetime="2022-08-22T22:39:26+08:00">2022-08-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-09-19 15:54:46" itemprop="dateModified" datetime="2022-09-19T15:54:46+08:00">2022-09-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">C++秋招整理</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="C-突击面试"><a href="#C-突击面试" class="headerlink" title="C++突击面试"></a>C++突击面试</h1><p>参考博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/luanfenlian0992/article/details/120022236?spm=1001.2014.3001.5502">https://blog.csdn.net/luanfenlian0992/article/details/120022236?spm=1001.2014.3001.5502</a></p>
+<h2 id="编译内存相关"><a href="#编译内存相关" class="headerlink" title="编译内存相关"></a>编译内存相关</h2><ol>
+<li><p>C++程序编译过程</p>
+<p> 编译过程分为四个部分：编译预处理，编译，汇编，链接</p>
+<ul>
+<li><p>编译预处理：主要处理#开头的指令。例如#include的头文件要导入，#define的宏要展开，处理条件预编译指令等，删除注释</p>
+</li>
+<li><p>编译：编译阶段编译器主要做词法分析、语法分析、语义分析等，检查无误后将源码翻译成汇编语言</p>
+</li>
+<li><p>汇编：将汇编代码翻译成机器语言，生成二进制文本形式的.o文件</p>
+</li>
+<li><p>链接：编译时编译器只对单个文件进行了处理，而某个源文件中的函数可能引用了另一个源文件中定义的某个符号，或者调用了某个库文件中的函数，这时是无法确定它的地址的，只有将所有目标文件链接到一起才能确定最终的地址。链接的目的就是将目标文件</p>
+<ul>
+<li><p>静态链接：代码从其所在的静态链接库中拷贝到最终的可执行程序中，在该程序被执行时，这些代码会被装入到该进程的虚拟地址空间中</p>
+<ul>
+<li><p>浪费空间：每个可执行文件都会有目标文件的一个副本，如果目标文件进行了修改，就需要重新编译链接生成新的可执行文件（更新困难）</p>
+</li>
+<li><p>运行速度快，因为可执行程序具备了程序运行的所有内容</p>
+</li>
+</ul>
+</li>
+<li><p>动态链接：</p>
+<ul>
+<li><p>节省内存，更新方便</p>
+</li>
+<li><p>每次运行都需要链接，相比静态链接会有一定的性能损失</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>C++内存管理</p>
+<p> C++内存分区：栈、堆、全局/静态存储区、常量存储区、代码区</p>
+<ul>
+<li><p><strong>栈</strong>：存放函数的局部变量、函数参数、返回地址等，由编译器自动分配和释放</p>
+</li>
+<li><p><strong>堆</strong>：动态申请的内存空间，由程序员控制它的分配和释放，如果程序执行结束还没有释放，操作系统会自动回收。堆从低地址向高地址增长，一般可以分配几个G大小的内存</p>
+</li>
+<li><p><strong>全局/静态存储区</strong>：存放全局变量和静态变量，程序运行结束操作系统自动释放。<em>C中未初始化的变量存放在.bss段中，初始化的放在.data段中；c++不再区分</em></p>
+</li>
+<li><p><strong>常量存储区</strong>：存放常量，不允许修改，程序运行结束自动释放</p>
+</li>
+<li><p><strong>代码区</strong>：存放函数的二进制代码，由操作系统进行管理</p>
+</li>
+</ul>
+</li>
+<li><p>栈和堆的区别</p>
+<ul>
+<li><p>申请方式：栈是系统自动分配，堆是程序员主动申请</p>
+</li>
+<li><p>申请后系统响应：</p>
+<ul>
+<li><p>分配栈空间时，如果剩余空间大于申请空间则分配成功，否则分配失败，栈溢出</p>
+</li>
+<li><p>堆在内存中的呈现方式类似于链表（记录空闲地址空间的链表），申请空间时，会遍历链表，找到第一个大于申请空间的节点分配给程序，并将该节点从链表中删除。对于大多数系统，会在这块内存空间的首地址处记录本次分配空间的大小，便于释放内存。同时，当内存空间大小大于申请空间大小时，系统会自动将多余的部分重新放入空闲链表中</p>
+</li>
+</ul>
+</li>
+<li><p>空间大小：栈是一块连续的内存区域，大小是操作系统预定好的；堆是不连续的内存区域，大小受限于虚拟内存大小</p>
+</li>
+<li><p>生长方向：栈向低地址扩展；堆向高地址扩展  </p>
+</li>
+<li><p>申请效率：栈由操作系统自动分配，有专门的寄存器存放栈的地址，和专门的指令执行压栈出栈，申请效率高，但不够灵活；堆由程序员主动申请，效率低，使用方便但容易产生碎片</p>
+</li>
+<li><p>存放内容：栈存放函数的局部变量、函数参数、返回地址等；堆存放的内容由程序员填充</p>
+</li>
+</ul>
+</li>
+<li><p>变量的区别</p>
+<p> 全局变量、局部变量、静态全局变量、局部全局变量的区别：</p>
+<ul>
+<li><p>从作用域看：</p>
+<ul>
+<li><p>全局变量：具有全局作用域。只需要在一个源文件中定义，就可以作用于所有的源文件</p>
+</li>
+<li><p>静态全局变量：具有文件作用域。与全局变量的区别在于：如果程序包含多个文件，它作用于定义它的文件里，不能作用到其他文件里，即被static关键字修饰过的变量具有文件作用域。故不同源文件中定义相同名字的静态全局变量，也为不同的变量</p>
+</li>
+<li><p>局部变量：具有局部作用域。在程序运行期间不是一直存在，只在函数执行期间存在。函数的一次调用执行结束后，变量被撤销，其所占用的内存也被收回</p>
+</li>
+<li><p>静态局部变量：具有局部作用域。只被初始化一次，从被初始化到函数运行结束一致存在，和全局变量的区别在于全局变量对所有的函数都可见，而静态局部变量只对定义自己的函数体可见</p>
+</li>
+</ul>
+</li>
+<li><p>从分配内存空间看：</p>
+<ul>
+<li><p>静态存储区：全局变量，静态局部变量，静态全局变量</p>
+</li>
+<li><p>栈：局部变量</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>全局变量定义在头文件中的问题</p>
+<p> 如果在头文件中定义全局变量，当该头文件被多个文件include时，该变量会被定义多次，导致重复定义，因此不能在头文件中定义全局变量</p>
+</li>
+<li><p>内存对齐</p>
+<ul>
+<li><p>什么是内存对齐</p>
+<p>  内存对齐：编译器将程序中的每个“数据单元”安排在字的整数倍的地址指向的内存之中</p>
+</li>
+<li><p>内存对齐的原则：</p>
+<ol>
+<li><p>数据成员对齐：结构体的第一个数据成员存放在与结构体偏移量为0的地址处，之后的数据成员存储起始位置都是该数据成员大小的整数倍位置</p>
+</li>
+<li><p>结构体作为数据成员的对齐：如果结构体中还包含结构体成员，内部结构体应该以它的最大数据成员大小的整数倍开始存储。例如：struct A中包含struct B，B的成员有cha, int, double，则B应该以sizeof(double)的整数倍为存储的起始地址</p>
+</li>
+<li><p>整个结构体的大小，应该为其最大数据成员大小的整数倍</p>
+</li>
+</ol>
+</li>
+<li><p>内存对齐的原因</p>
+<ol>
+<li><p>平台原因：某些硬件平台只能存取对齐数据，存取非对齐的数据可能会引发异常</p>
+</li>
+<li><p>性能原因：CPU将内存分成一块一块，块的大小可以是2, 4, 6, 8, 16字节，CPU读取内存时也是一块一块进行读取的。内存对齐后，CPU的内存访问速度回大大提升</p>
+</li>
+</ol>
+</li>
+<li><p>内存对齐的优点</p>
+<ol>
+<li><p>便于在不同平台之间进行移植</p>
+</li>
+<li><p>提高内存的访问效率</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>内存泄漏</p>
+<ul>
+<li><p>什么是内存泄漏</p>
+<p>  内存泄漏：由于疏忽或错误导致的程序未能释放已经不再使用的内存</p>
+</li>
+<li><p>内存泄漏的常见原因</p>
+<ol>
+<li><p>malloc/new申请的内存没有主动释放</p>
+</li>
+<li><p>malloc/free和new/delete必须各自成对出现，混用可能会造成问题</p>
+</li>
+<li><p>基类的析构函数没有定义为虚函数：当基类指针指向子类对象时，如果基类的析构函数不是virtual，那么子类的析构函数将不会被调用，子类的资源没有正确释放</p>
+</li>
+</ol>
+</li>
+<li><p>如何避免内存泄漏</p>
+<ol>
+<li><p>malloc/free和new/delete成对出现</p>
+</li>
+<li><p>智能指针</p>
+</li>
+<li><p>内存泄漏检测工具（？）</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>智能指针</p>
+<ul>
+<li><p>智能指针的用途</p>
+<p>  在C++中，动态内存的管理是用一对运算符完成的：new：在动态内存中为对象分配一块空间并返回一个指向该对象的指针/delete：销毁对象，并释放与之相关的内存</p>
+<p>  动态内存管理时容易出现两种问题：1. 忘记释放内存，造成内存泄漏；2. 尚未有指针引用内存的情况下就释放，会产生引用非法内存的指针。为了更加安全的使用动态内存，引入了智能指针的概念</p>
+</li>
+<li><p>智能指针类型</p>
+<p>  C++11支持三种智能指针，都定义在<code>&lt;memory&gt;</code>头文件中</p>
+<ul>
+<li><p>unique_ptr（独占指针）</p>
+<p>  独享所有权得智能指针，某一时刻只能有一个unique_ptr指向它管理得动态内存上的对象。当unique_ptr销毁的时候，它所指向的对象也会被销毁。</p>
+<ul>
+<li>不能拷贝(copy)和赋值（防止两个指针指向同一个对象），可以通过move()将对象的所有权从一个独占指针转移到另一个独占指针</li>
+</ul>
+</li>
+<li><p>shared_ptr（共享指针）</p>
+<p>  资源可以被多个指针共享。它使用技术机制来表明资源被几个指针共享，可以通过use_count()查看资源的所有者个数。</p>
+<ul>
+<li><strong>shared_ptr的缺点</strong>：<strong>当两个对象相互使用一个shared_ptr成员变量指向对方，会造成循环引用</strong>，使引用计数失效，从而导致内存泄漏，此时需要使用weak_ptr</li>
+</ul>
+</li>
+<li><p>weak_ptr（弱指针）</p>
+<p>  weak_ptr用于解决shared_ptr相互引用时的死锁问题：两个shared_ptr相互引用，那么他们的引用计数永远不为0，资源永远不会释放；<strong>weak_ptr是对对象的一种弱引用，不会增加对象的引用计数</strong>。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>智能指针常见问题</p>
+<ul>
+<li><p>一个unique_ptr怎么赋值给另一个unique_ptr</p>
+<p>  借助std::move()</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">unique_ptr&lt;string&gt; <span class="title">ptr1</span><span class="params">(<span class="keyword">new</span> string(<span class="string">&quot;hello world&quot;</span>))</span></span>;</span><br><span class="line">unique_ptr&lt;string&gt; ptr2 = <span class="built_in">move</span>(ptr1);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用智能指针可能出现的问题</p>
+<p>  shared_ptr循环引用（应该被调用的析构函数没有被调用，从而出现了内存泄漏）</p>
+<ul>
+<li>解决方法：weak_ptr</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>深拷贝与浅拷贝</p>
+<ul>
+<li><p>C++<strong>默认</strong>的拷贝构造函数是<strong>浅拷贝</strong>（</p>
+<p>  它只会复制一个一模一样的指针，并不会操作指针指向的东西，想要实现特定的逻辑需求，就要自定义拷贝构造函数，实现深拷贝</p>
+</li>
+<li><p>浅拷贝：将原对象或数组的引用直接赋给新对象/数组，新对象/数组只是原对象的一个引用</p>
+</li>
+<li><p>深拷贝：创建一个新的对象/数组，将原对象各项属性的值拷贝过去</p>
+</li>
+<li><p>引用拷贝/浅拷贝/深拷贝 区别：</p>
+<ul>
+<li><p>引用拷贝只是复制对象的地址，不会创建新的对象，任一变量修改都会引起其他变量修改；</p>
+</li>
+<li><p>浅拷贝会创建一个新对象，进行属性复制，但对于引用类型的属性，只会复制其对象地址，依然存在引用拷贝的连带修改问题</p>
+</li>
+<li><p>深拷贝完全复制整个对象，包括引用类型的属性。（深拷贝会在堆内存中另外申请空间来存储数据，而不是一个简单的赋值过程）</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="语言对比"><a href="#语言对比" class="headerlink" title="语言对比"></a>语言对比</h2><ol>
+<li><p>C++11新特性</p>
+<ul>
+<li><p>auto类型推导</p>
+<p>  自动类型推导，编译器会在<strong>编译期间</strong>通过初始值推导出变量的类型，auto定义的变量必须有初值</p>
+</li>
+<li><p>decltype类型推导</p>
+<p>  “declare type”的缩写，译为“声明类型”。和auto功能一样，用于<strong>在编译时期进行自动类型推导</strong></p>
+<p>  decltype可以从表达式的类型推断出要定义的变量类型，但不使用该表达式的值初始化变量</p>
+</li>
+<li><p>lambda表达式/lambda函数/匿名函数</p>
+<p>  用于定义并创建匿名的函数对象</p>
+<ul>
+<li><p>lambda语法形式</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[OuterVar](<span class="keyword">int</span> x, <span class="keyword">int</span> y) -&gt; <span class="keyword">int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> OuterVar + x + y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// [OuterVar]：括号内为捕获变量或者为空</span></span><br><span class="line"><span class="comment">// (int x, int y): 括号内为参数列表</span></span><br><span class="line"><span class="comment">// -&gt; : 箭头指向返回类型</span></span><br><span class="line"><span class="comment">// &#123;&#125; : 括号内为函数主体</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>eg.</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> f = [](<span class="keyword">int</span> a, <span class="keyword">int</span> b) -&gt; <span class="keyword">int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line">cout &lt;&lt; <span class="built_in">f</span>(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 编译器可以自行推导返回值，故与以下代码等价</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> f = [](<span class="keyword">int</span> a, <span class="keyword">int</span> b) &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line">cout &lt;&lt; <span class="built_in">f</span>(<span class="number">1</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>变量捕获 Capture Clause</p>
+<p>  功能：让匿名函数可以访问，甚至修改外部的变量</p>
+<p>  [N, &amp;M]: 变量名前有引用符号，按引用捕获，可以修改变量的值；不加引用符号是按值捕获，只能访问不能修改 </p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> N = <span class="number">100</span>, M = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">auto</span> g = [N, &amp;M](<span class="keyword">int</span> i) &#123;</span><br><span class="line">    M = <span class="number">20</span>; </span><br><span class="line">    <span class="comment">// N = 30; 不能修改N，会报错</span></span><br><span class="line">    <span class="keyword">return</span> N * i;</span><br><span class="line">&#125;;</span><br><span class="line">cout &lt;&lt; <span class="built_in">g</span>(<span class="number">10</span>) &lt;&lt; endl;</span><br><span class="line">cout &lt;&lt; M &lt;&lt; endl;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>[&amp;]：捕获语句中只写引用符号，会按照引用捕获所有的封闭范围中的变量</p>
+</li>
+<li><p>[=]：捕获语句中只写等号，所有的变量按值捕获</p>
+</li>
+<li><p>[&amp;, =N]：单独指定一些变量按值捕获，其余变量按引用捕获。例如：按值捕获N</p>
+<ul>
+<li><p>引用捕获N，按值捕获M的写法：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[&amp;N, M]</span><br><span class="line">[M, &amp;N]</span><br><span class="line">[&amp;, =M]</span><br><span class="line">[=, &amp;N]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>[this]：在class中使用匿名函数，可以用this捕获当前实例的指针</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>范围for语句</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (declaration : expression) &#123;</span><br><span class="line">    statement</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// expression</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>右值引用</p>
+<p>  绑定到右值的引用，用&amp;&amp;来获得右值引用。右值引用智能绑定到要销毁的对象上</p>
+<p>  引入右值引用的原因：替代要销毁对象的拷贝，提高效率；移动含有不能共享资源的类对象</p>
+<blockquote>
+<p>左值：在内存有确定存储地址、变量名，表达式结束依然存在的值</p>
+<p>右值：在内存中没有确定存储地址、没有变量名，表达式结束就会销毁的值</p>
+</blockquote>
+</li>
+<li><p>智能指针</p>
+</li>
+<li><p>delete函数和default函数</p>
+</li>
+</ul>
+</li>
+<li><p>C和C++的区别  </p>
+<ul>
+<li><p>C是过程式编程语言，不支持类和对象，不支持多态、封装和继承；C++是过程式和面向对象编程语言的结合，支持多态、封装和继承</p>
+<ul>
+<li><p>面向过程的思路：分析解决问题所需的步骤，用函数把这些步骤依次实现</p>
+</li>
+<li><p>面向对象的思路：把构成问题分解为各个对象，建立对象的目的不是完成一个步骤，而是描述某个事物在解决整个问题步骤中的行为</p>
+</li>
+<li><p>优缺点：</p>
+<ul>
+<li><p>面向过程语言：性能较高，适用于单片机、嵌入式开发、Linux/Unix等；没有面向对象易维护、易复用、易扩展</p>
+</li>
+<li><p>面向对象语言：易维护、易复用、易扩展，因为具有封装、继承、多态的特性，可以设计出低耦合的系统，使其更加灵活、易于维护；但性能比面向过程低</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>动态内存管理：C通过malloc/free进行内存的分配和释放；C++通过new/delete管理内存</p>
+</li>
+<li><p>C和C++相比，可以说C是C++的子集，C++是C的超集。C++可以运行大部分C代码，C不能运行C++代码</p>
+</li>
+<li><p>C++支持namespace命名空间，可以让用户自定义心得名字空间作用域，避免全局的名字冲突；C不支持</p>
+</li>
+</ul>
+</li>
+<li><p>Python和C++的区别</p>
+<ul>
+<li><p>语言：Python为脚本语言，解释执行，不需要经过编译；C++是一种需要编译后才能运行的语言，在特定的机器上编译后运行</p>
+</li>
+<li><p>运行效率：C++运行效率高，安全稳定。</p>
+<p>  Python和C++代码最终都会转化为CPU指令，但一般情况下，Python转换出的CPU指令会比C++多很多；其次，Python是解释执行的，和物理机CPU之间多了解释器，C++编译执行，直接就是机器编码，编译的时候编译器还会进行优化。</p>
+</li>
+<li><p>开发效率：Python开发效率高，一两句代码就能实现的功能，C++往往需要更多的代码才能实现</p>
+</li>
+<li><p>语法：Python不需要声明就能使用，语法更加灵活，更适用于上层开发者</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h2><ol>
+<li><p>面向对象的三大特性</p>
+<p> 面向对象：面向对象把数据和对数据的操作方法放在一起，作为一个相互依存的整体，即对象。</p>
+<p> 面向对象的三大特性：</p>
+<ul>
+<li><p>封装：将具体的实现过程和数据封装成一个函数，只能通过接口进行访问，降低耦合性。增强了数据安全性以及隐藏了类的实现细节，使用者无需了解具体实现细节</p>
+</li>
+<li><p>继承：子类继承父类的特征和行为，子类有父类的非private方法和变量成员，子类可以对父类的方法进行重写，减少代码冗余、提高代码复用性，便于功能的扩展</p>
+</li>
+<li><p>多态：多态是不同继承类的对象，对同一消息做出不同的相应，基类的指针指向或绑定到派生类的对象，使得基类指针呈现不同的表现方式</p>
+</li>
+</ul>
+</li>
+<li><p>重载、重写、隐藏的区别</p>
+<ul>
+<li><p>重载：重载指在同一访问区内声明多个具有不同参数列表（参数类型、个数、顺序）的同名函数</p>
+</li>
+<li><p>重写（覆盖）：派生类中存在重新定义的函数，函数名和参数列表与基函数相同，函数体不同。派生调用时会调用派生类的重写函数，相当于将原函数覆盖掉。重写的基类中被重写的函数必须有virtual修饰</p>
+</li>
+<li><p>隐藏：当派生类中存在与基类同名的函数，不论参数列表是否相同，基类函数都会被隐藏。调用时访问的是派生类的函数。</p>
+</li>
+<li><p><strong>重写</strong>与<strong>重载</strong>的区别</p>
+<ul>
+<li><p>范围区别：重载发生在同一个类的内部，重写发生在不同类之间（父类和子类）</p>
+</li>
+<li><p>参数区别：重写与重载的函数名都与原函数相同，重写要求参数列表和返回值也相同，重写函数会将原函数覆盖；重载要求不相同的参数列表，不关注返回值，调用时根据传入参数类型匹配调用的具体时哪一个函数</p>
+</li>
+<li><p>virtual：重写的函数基类中必须有virtual关键字的修饰，重载的函数可以有也可以没有</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="类相关"><a href="#类相关" class="headerlink" title="类相关"></a>类相关</h2><h2 id="关键字库函数"><a href="#关键字库函数" class="headerlink" title="关键字库函数"></a>关键字库函数</h2><h2 id="语言特性相关"><a href="#语言特性相关" class="headerlink" title="语言特性相关"></a>语言特性相关</h2>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/08/16/%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%AC%94%E8%AE%B0/" rel="prev" title="计网秋招整理">
+      <i class="fa fa-chevron-left"></i> 计网秋招整理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/08/22/%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86/" rel="next" title="二分">
+      二分 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#C-%E7%AA%81%E5%87%BB%E9%9D%A2%E8%AF%95"><span class="nav-number">1.</span> <span class="nav-text">C++突击面试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%86%85%E5%AD%98%E7%9B%B8%E5%85%B3"><span class="nav-number">1.1.</span> <span class="nav-text">编译内存相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E8%A8%80%E5%AF%B9%E6%AF%94"><span class="nav-number">1.2.</span> <span class="nav-text">语言对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.3.</span> <span class="nav-text">面向对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E7%9B%B8%E5%85%B3"><span class="nav-number">1.4.</span> <span class="nav-text">类相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%AD%97%E5%BA%93%E5%87%BD%E6%95%B0"><span class="nav-number">1.5.</span> <span class="nav-text">关键字库函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7%E7%9B%B8%E5%85%B3"><span class="nav-number">1.6.</span> <span class="nav-text">语言特性相关</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="XYZinc"
+      src="/images/XYZinc.png">
+  <p class="site-author-name" itemprop="name">XYZinc</p>
+  <div class="site-description" itemprop="description">⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/XYZinc-xyx" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;XYZinc-xyx" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/XYZinc/" title="cnblogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;XYZinc&#x2F;" rel="noopener" target="_blank"><i class="fa fa-compass fa-fw"></i>cnblogs</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      friend_links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dextertyw.github.io/" title="https:&#x2F;&#x2F;dextertyw.github.io&#x2F;" rel="noopener" target="_blank">Tyw_ei</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://anoxiacxy.github.io/" title="https:&#x2F;&#x2F;anoxiacxy.github.io&#x2F;" rel="noopener" target="_blank">Anoxiacxy</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://skylark1003.gitee.io/" title="https:&#x2F;&#x2F;skylark1003.gitee.io&#x2F;" rel="noopener" target="_blank">Skylark</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XYZinc</span>
+</div>
+
+
+<!-- 底部的强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

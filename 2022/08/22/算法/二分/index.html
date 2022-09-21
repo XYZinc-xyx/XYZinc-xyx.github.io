@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="二分法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二分">
+<meta property="og:url" content="http://example.com/2022/08/22/%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86/index.html">
+<meta property="og:site_name" content="XYZinc&#39;s blog">
+<meta property="og:description" content="二分法">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-08-22T14:42:20.788Z">
+<meta property="article:modified_time" content="2022-08-22T14:56:02.217Z">
+<meta property="article:author" content="XYZinc">
+<meta property="article:tag" content="二分">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/08/22/%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>二分 | XYZinc's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">XYZinc's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/22/%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/XYZinc.png">
+      <meta itemprop="name" content="XYZinc">
+      <meta itemprop="description" content="⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XYZinc's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          二分
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-22 22:42:20 / 修改时间：22:56:02" itemprop="dateCreated datePublished" datetime="2022-08-22T22:42:20+08:00">2022-08-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">二分法</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="二分"><a href="#二分" class="headerlink" title="二分"></a>二分</h1><p>二分思想在解决算法问题中通常用于<strong>二分查找</strong>和<strong>二分答案</strong></p>
+<h2 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h2><p>二分思想：在有序序列a[l, r]中查找一个数，可以每次取序列的中间数a[mid = (l + r)/2]与其比较，若待查找数小于中间数，则表示其在序列[l, mid - 1]中；若待查找数大于中间数，则表示其在序列[mid + 1, r]中。重复上述过程继续查找，直至a[mid]为待查找数。</p>
+<p>在一个有序序列中使用二分查找的复杂度为O(logn)</p>
+<h2 id="二分答案"><a href="#二分答案" class="headerlink" title="二分答案"></a>二分答案</h2><p>将二分查找的思想推广，对于一个具有单调性的问题，我们可以通过二分的策略找到最优的答案。</p>
+<p>在二分查找过程中，对于每次比对的数，若待查找的数更小，则挪动边界在较小区间继续查找；若带查找的数更大，则挪动边界在较大区间查找。</p>
+<p>推广至二分答案，则是在一个区间内二分地枚举答案，判定其是否满足题目条件。如果满足，则去寻找更好的解；如果不满足，则去尝试一些更劣的解，判断其是否能满足。</p>
+<p>一个常见说法是：“求最大的最小”，“最小的最大”</p>
+<h1 id="二分的边界问题"><a href="#二分的边界问题" class="headerlink" title="二分的边界问题"></a>二分的边界问题</h1><h2 id="手写二分"><a href="#手写二分" class="headerlink" title="手写二分"></a>手写二分</h2><p>二分是一个思想比较简单的基本算法，但却容易被错误的实现，其中，最常出错的地方即为二分的边界问题。</p>
+<p>这里介绍一种比较通用的写法，可以应对绝大多数的二分问题。以二分查找为例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> left = <span class="number">0</span>, right = n;    <span class="comment">// 设置查找的边界</span></span><br><span class="line"><span class="keyword">int</span> ans = <span class="number">0</span>;        <span class="comment">// ans记录查找的答案</span></span><br><span class="line"><span class="keyword">while</span> (left &lt;= right)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> mid = (left + right) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(arr[mid] &lt;= key)</span><br><span class="line">    &#123;</span><br><span class="line">        l = mid + <span class="number">1</span>;</span><br><span class="line">        ans = mid;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        r = mid - <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="调用函数"><a href="#调用函数" class="headerlink" title="调用函数"></a>调用函数</h2><p>algorithm头文件下有三个二分查找函数，分别为binary_search，lower_bound和upper_bound。要求序列必须有序</p>
+<ol>
+<li><p>binary_search()</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查找[first, last]区域内是否包含val。返回true/false分别代表val存在/不存在</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">binary_search</span> <span class="params">(ForwardIterator first, ForwardIterator last, <span class="keyword">const</span> T&amp; val)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">binary_search</span> <span class="params">(ForwardIterator first, ForwardIterator last, <span class="keyword">const</span> T&amp; val, Compare comp)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>lower_bound()</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查找[first, last]区域内第一个大于等于val数。返回一个正向迭代器，若存在这样的数，迭代器指向找到的数；若不存在，迭代器指向和last迭代器指向相同</span></span><br><span class="line"><span class="function">ForwardIterator <span class="title">lower_bound</span> <span class="params">(ForwardIterator first, ForwardIterator last, <span class="keyword">const</span> T&amp; val)</span></span>;</span><br><span class="line"><span class="function">ForwardIterator <span class="title">lower_bound</span> <span class="params">(ForwardIterator first, ForwardIterator last, <span class="keyword">const</span> T&amp; val, Compare comp)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>upper_bound()</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查找[first, last]区域内第一个大于val数。返回一个正向迭代器，若存在这样的数，迭代器指向找到的数；若不存在，迭代器指向和last迭代器指向相同</span></span><br><span class="line"><span class="function">ForwardIterator <span class="title">upper_bound</span> <span class="params">(ForwardIterator first, ForwardIterator last, <span class="keyword">const</span> T&amp; val)</span></span>;</span><br><span class="line"><span class="function">ForwardIterator <span class="title">upper_bound</span> <span class="params">(ForwardIterator first, ForwardIterator last, <span class="keyword">const</span> T&amp; val, Compare comp)</span></span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%BA%8C%E5%88%86/" rel="tag"># 二分</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/08/22/C++%E7%A7%8B%E6%8B%9B%E6%95%B4%E7%90%86/" rel="prev" title="C++秋招整理">
+      <i class="fa fa-chevron-left"></i> C++秋招整理
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%88%86"><span class="nav-number">1.</span> <span class="nav-text">二分</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-number">1.1.</span> <span class="nav-text">二分查找</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88"><span class="nav-number">1.2.</span> <span class="nav-text">二分答案</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%88%86%E7%9A%84%E8%BE%B9%E7%95%8C%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">二分的边界问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%8B%E5%86%99%E4%BA%8C%E5%88%86"><span class="nav-number">2.1.</span> <span class="nav-text">手写二分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.</span> <span class="nav-text">调用函数</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="XYZinc"
+      src="/images/XYZinc.png">
+  <p class="site-author-name" itemprop="name">XYZinc</p>
+  <div class="site-description" itemprop="description">⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/XYZinc-xyx" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;XYZinc-xyx" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/XYZinc/" title="cnblogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;XYZinc&#x2F;" rel="noopener" target="_blank"><i class="fa fa-compass fa-fw"></i>cnblogs</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      friend_links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dextertyw.github.io/" title="https:&#x2F;&#x2F;dextertyw.github.io&#x2F;" rel="noopener" target="_blank">Tyw_ei</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://anoxiacxy.github.io/" title="https:&#x2F;&#x2F;anoxiacxy.github.io&#x2F;" rel="noopener" target="_blank">Anoxiacxy</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://skylark1003.gitee.io/" title="https:&#x2F;&#x2F;skylark1003.gitee.io&#x2F;" rel="noopener" target="_blank">Skylark</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XYZinc</span>
+</div>
+
+
+<!-- 底部的强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

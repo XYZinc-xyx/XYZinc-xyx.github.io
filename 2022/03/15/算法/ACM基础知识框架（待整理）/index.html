@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="本博客写于ACM退役后准备实习期间，旨在梳理一下思路（顺便填充一下博客），初学者可以参考知识点进行学习安排，但不建议按照文章顺序及使用文章中选取的题目进行对应训练。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ACM基础知识框架(待整理)">
+<meta property="og:url" content="http://example.com/2022/03/15/%E7%AE%97%E6%B3%95/ACM%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%A1%86%E6%9E%B6%EF%BC%88%E5%BE%85%E6%95%B4%E7%90%86%EF%BC%89/index.html">
+<meta property="og:site_name" content="XYZinc&#39;s blog">
+<meta property="og:description" content="本博客写于ACM退役后准备实习期间，旨在梳理一下思路（顺便填充一下博客），初学者可以参考知识点进行学习安排，但不建议按照文章顺序及使用文章中选取的题目进行对应训练。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/ACM.png">
+<meta property="article:published_time" content="2022-03-15T01:41:31.773Z">
+<meta property="article:modified_time" content="2022-04-22T09:53:26.739Z">
+<meta property="article:author" content="XYZinc">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/ACM.png">
+
+<link rel="canonical" href="http://example.com/2022/03/15/%E7%AE%97%E6%B3%95/ACM%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%A1%86%E6%9E%B6%EF%BC%88%E5%BE%85%E6%95%B4%E7%90%86%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>ACM基础知识框架(待整理) | XYZinc's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">XYZinc's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/15/%E7%AE%97%E6%B3%95/ACM%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%A1%86%E6%9E%B6%EF%BC%88%E5%BE%85%E6%95%B4%E7%90%86%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/XYZinc.png">
+      <meta itemprop="name" content="XYZinc">
+      <meta itemprop="description" content="⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XYZinc's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ACM基础知识框架(待整理)
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-15 09:41:31" itemprop="dateCreated datePublished" datetime="2022-03-15T09:41:31+08:00">2022-03-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-22 17:53:26" itemprop="dateModified" datetime="2022-04-22T17:53:26+08:00">2022-04-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8E%86%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">历程</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>本博客写于ACM退役后准备实习期间，旨在梳理一下思路<del>（顺便填充一下博客）</del>，初学者可以参考知识点进行学习安排，但不建议按照文章顺序及使用文章中选取的题目进行对应训练。</p>
+</blockquote>
+<span id="more"></span>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/ACM.png" alt="ACM知识框架"></p>
+<h2 id="基础算法"><a href="#基础算法" class="headerlink" title="基础算法"></a>基础算法</h2><hr>
+<h3 id="模拟"><a href="#模拟" class="headerlink" title="模拟"></a>模拟</h3><p>模拟</p>
+<h3 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h3><p><a target="_blank" rel="noopener" href="https://xyzinc-xyx.github.io/2022/03/16/%E6%8E%92%E5%BA%8F/">常见排序算法</a></p>
+<h3 id="贪心"><a href="#贪心" class="headerlink" title="贪心"></a>贪心</h3><p>一些题：<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/XYZinc/p/7372898.html">bzoj1150 [APIO2007]数据备份</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/XYZinc/p/7404442.html">luogu1791 线段覆盖</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/XYZinc/p/7593703.html">luogu2625 豪华游轮</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/XYZinc/p/8862632.html">loj6035「雅礼集训 2017 Day4」洗衣服</a></p>
+<h3 id="高精度"><a href="#高精度" class="headerlink" title="高精度"></a>高精度</h3><p><a target="_blank" rel="noopener" href="https://xyzinc-xyx.github.io/2022/03/17/%E9%AB%98%E7%B2%BE%E5%BA%A6/">高精度运算</a></p>
+<h3 id="前缀和-amp-差分"><a href="#前缀和-amp-差分" class="headerlink" title="前缀和&amp;差分"></a>前缀和&amp;差分</h3><p><a target="_blank" rel="noopener" href="https://xyzinc-xyx.github.io/2022/03/19/%E5%89%8D%E7%BC%80%E5%92%8C&amp;%E5%B7%AE%E5%88%86/">前缀和 &amp; 差分</a></p>
+<h3 id="二分"><a href="#二分" class="headerlink" title="二分"></a>二分</h3><h3 id="三分"><a href="#三分" class="headerlink" title="三分"></a>三分</h3><h3 id="位运算"><a href="#位运算" class="headerlink" title="位运算"></a>位运算</h3><h3 id="分治"><a href="#分治" class="headerlink" title="分治"></a>分治</h3><p>计算几何<br>    凸包<br>    半平面交<br>    旋转卡壳<br>    圆相关<br>    扫描线</p>
+<p>图论<br>    搜索<br>        BFS<br>        DFS<br>        A*<br>        迭代加深<br>        记忆化<br>    最短路<br>        Dijkstra<br>        Flody<br>        SPFA<br>        差分约束<br>        k短路<br>    树<br>        前/中/后序遍历<br>        树的直径<br>        最小生成树<br>            Kruskal<br>            Prim<br>            次小生成树<br>        最小度限制生成树<br>            k小度限制生成树<br>        哈夫曼树<br>    图的联通<br>        Tarjan<br>            强联通分量（有向图）<br>            双联通分量（无向图）<br>            割点<br>            割边（桥）<br>        2-SAT<br>    网络流<br>        最大流<br>        最小割<br>        费用流<br>            zkw<br>        Ford-Fulkerson<br>        Edmond-Karp<br>        Dinic<br>        待补充，具体参考网络流24题<br>    二分图<br>        二分图匹配<br>            匈牙利算法<br>            KM算法<br>        最小点覆盖<br>        最小边覆盖<br>        最大独立集<br>    并查集<br>        路径压缩<br>        带边权的并查集<br>        拆点<br>    欧拉回路<br>    拓扑排序</p>
+<p>数据结构<br>    基础数据结构<br>        栈<br>            单调栈<br>        队列<br>            单调队列<br>        堆<br>            可并堆<br>        链表<br>        哈希表<br>        倍增<br>    中级数据结构<br>        分块<br>        可并堆<br>            左偏树<br>            斜堆<br>            二项堆<br>        树状树组<br>        线段树<br>        平衡树<br>            splay<br>            treap<br>            替罪羊树<br>        数链剖分<br>    高级数据结构<br>        k-d tree<br>        主席树<br>        树套树<br>        LCT</p>
+<p>数论<br>    gcd及exgcd<br>    ksm<br>    线性筛<br>    高斯消元<br>    矩阵<br>        矩阵乘法<br>        矩阵快速幂<br>    乘法逆元<br>    组合数学<br>    欧拉函数<br>    中国剩余定理<br>    卢卡斯定理<br>    反素数<br>    置换<br>    莫比乌斯反演<br>    FFT快速傅里叶</p>
+<p>博弈论<br>    SG函数<br>    α-β</p>
+<p>模拟算法<br>    爬山算法<br>    模拟退火<br>    蚁群算法<br>    遗传算法</p>
+<p>字符串<br>    KMP<br>    Trie<br>    Hash<br>    AC自动机<br>    后缀树组<br>    Manacher</p>
+<p>动态规划<br>    背包<br>        01背包<br>        完全背包<br>        多重背包<br>        二维费用背包<br>        分组背包<br>        前k大背包<br>        有依赖的背包问题<br>        详情参考背包九讲<br>    LIS<br>    LCS<br>    区间dp<br>    树型dp<br>    状压dp<br>    双线dp</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/12/%E7%AC%94%E8%AE%B0/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="prev" title="《机器学习》笔记">
+      <i class="fa fa-chevron-left"></i> 《机器学习》笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/03/16/%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/" rel="next" title="排序">
+      排序 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">基础算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E6%8B%9F"><span class="nav-number">1.1.</span> <span class="nav-text">模拟</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F"><span class="nav-number">1.2.</span> <span class="nav-text">排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B4%AA%E5%BF%83"><span class="nav-number">1.3.</span> <span class="nav-text">贪心</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E7%B2%BE%E5%BA%A6"><span class="nav-number">1.4.</span> <span class="nav-text">高精度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%BC%80%E5%92%8C-amp-%E5%B7%AE%E5%88%86"><span class="nav-number">1.5.</span> <span class="nav-text">前缀和&amp;差分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%88%86"><span class="nav-number">1.6.</span> <span class="nav-text">二分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E5%88%86"><span class="nav-number">1.7.</span> <span class="nav-text">三分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8D%E8%BF%90%E7%AE%97"><span class="nav-number">1.8.</span> <span class="nav-text">位运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%B2%BB"><span class="nav-number">1.9.</span> <span class="nav-text">分治</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="XYZinc"
+      src="/images/XYZinc.png">
+  <p class="site-author-name" itemprop="name">XYZinc</p>
+  <div class="site-description" itemprop="description">⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/XYZinc-xyx" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;XYZinc-xyx" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/XYZinc/" title="cnblogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;XYZinc&#x2F;" rel="noopener" target="_blank"><i class="fa fa-compass fa-fw"></i>cnblogs</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      friend_links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dextertyw.github.io/" title="https:&#x2F;&#x2F;dextertyw.github.io&#x2F;" rel="noopener" target="_blank">Tyw_ei</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://anoxiacxy.github.io/" title="https:&#x2F;&#x2F;anoxiacxy.github.io&#x2F;" rel="noopener" target="_blank">Anoxiacxy</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://skylark1003.gitee.io/" title="https:&#x2F;&#x2F;skylark1003.gitee.io&#x2F;" rel="noopener" target="_blank">Skylark</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XYZinc</span>
+</div>
+
+
+<!-- 底部的强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

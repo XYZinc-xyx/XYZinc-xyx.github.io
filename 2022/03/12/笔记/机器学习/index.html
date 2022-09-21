@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="吴恩达《机器学习》笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《机器学习》笔记">
+<meta property="og:url" content="http://example.com/2022/03/12/%E7%AC%94%E8%AE%B0/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="XYZinc&#39;s blog">
+<meta property="og:description" content="吴恩达《机器学习》笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261056417.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261345095.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261345271.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261358354.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261407833.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261421665.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261432038.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261434218.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261444930.png">
+<meta property="article:published_time" content="2022-03-12T15:15:02.120Z">
+<meta property="article:modified_time" content="2022-04-21T12:39:09.196Z">
+<meta property="article:author" content="XYZinc">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261056417.png">
+
+<link rel="canonical" href="http://example.com/2022/03/12/%E7%AC%94%E8%AE%B0/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>《机器学习》笔记 | XYZinc's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">XYZinc's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/12/%E7%AC%94%E8%AE%B0/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/XYZinc.png">
+      <meta itemprop="name" content="XYZinc">
+      <meta itemprop="description" content="⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XYZinc's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《机器学习》笔记
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-12 23:15:02" itemprop="dateCreated datePublished" datetime="2022-03-12T23:15:02+08:00">2022-03-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-21 20:39:09" itemprop="dateModified" datetime="2022-04-21T20:39:09+08:00">2022-04-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">吴恩达《机器学习》笔记</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>网址：[吴恩达机器学习系列课程][<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV164411b7dx?p=5">https://www.bilibili.com/video/BV164411b7dx?p=5</a>]</p>
+<p>推荐一个很全的笔记：<a target="_blank" rel="noopener" href="https://github.com/fengdu78/Coursera-ML-AndrewNg-Notes">吴恩达机器学习教程中文笔记</a></p>
+</blockquote>
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><blockquote>
+<p>Arthur Samuel(1959). Machine Learning: Field of study that gives computers the ability to learn without being explicitly programmed.</p>
+<p>Tom Mitchell(1998). Well-posed Learning Problem:A computer program is said to learn from experience E with respect to some task T and some performance measure P, if its performance on T, as measured by P, improves with experience E.</p>
+<blockquote>
+<p>计算机程序从经验E中学习，解决某一任务T，并进行某一性能度量P。通过P，测定程序在T上的表现因经验E而提高。</p>
+</blockquote>
+</blockquote>
+<p>常见的机器学习算法包括：监督学习和无监督学习。简单来说，监督学习指教会计算机做某件事，无监督学习则指让计算机自己学习。</p>
+<h2 id="监督学习"><a href="#监督学习" class="headerlink" title="监督学习"></a>监督学习</h2><p>监督学习指给算法一个数据集，其中包含了正确答案，算法的目的是对于位置数据能计算出更多的正确答案。</p>
+<h3 id="回归问题"><a href="#回归问题" class="headerlink" title="回归问题"></a>回归问题</h3><p>预测<strong>连续</strong>值的输出。例如对房价的预测</p>
+<h3 id="分类问题"><a href="#分类问题" class="headerlink" title="分类问题"></a>分类问题</h3><p>预测一个离散值的输出。例如对肿瘤恶性、良性的判断，用于对事物的分类</p>
+<h2 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h2><p>无监督学习的数据集没有标签或全部具有相同的标签，关于学习没有明确的目的，而是让算法自行寻找这些数据中的某种结构，将数据集划分为几个类别。</p>
+<h3 id="聚类算法"><a href="#聚类算法" class="headerlink" title="聚类算法"></a>聚类算法</h3><p>将数据集分成簇，使簇内相似性高，簇间相似性第。例如谷歌新闻的专题分类</p>
+<h1 id="单变量线性回归"><a href="#单变量线性回归" class="headerlink" title="单变量线性回归"></a>单变量线性回归</h1><h2 id="模型表示"><a href="#模型表示" class="headerlink" title="模型表示"></a>模型表示</h2><blockquote>
+<p>训练集（Training Set）：</p>
+<ul>
+<li>$m$ : 训练集中实例的数量  </li>
+<li>$x$ : 特征变量/输入变量</li>
+<li>$y$ : 目标变量/输出变量</li>
+<li>$(x,y)$ : 训练集中的样本</li>
+<li>$( { { x } ^ { (i) } }, { { y } ^ { (i) } } )$ 第$i$ 个训练样本</li>
+<li>$h$: 假设函数（hypothesis），代表学习算法的解决方案 </li>
+</ul>
+</blockquote>
+<p>对于单变量线性回归问题，预测函数的表达方式为：$h_\theta \left( x \right)=\theta_{0} + \theta_{1}x$</p>
+<h2 id="代价函数"><a href="#代价函数" class="headerlink" title="代价函数"></a>代价函数</h2><p>在线性回归中，我们要解决的是一个最小化问题，即选择合适的参数（$\theta_{0}$, $\theta_{1}$），使得$h \left( x \right)$和$y$的差距（$(h \left( x \right) - y)^2$）尽量小</p>
+<p>我们使用代价函数来描述这个差距：</p>
+<script type="math/tex; mode=display">
+J \left( \theta_0, \theta_1 \right) = \frac{1}{2m}\sum\limits_{i=1}^m \left( h_{\theta}(x^{(i)})-y^{(i)} \right)^{2}</script><blockquote>
+<p>$\frac{1}{2m}$中的2是为了后续求导时可以直接抵消，方便计算</p>
+</blockquote>
+<h2 id="代价函数的直观理解"><a href="#代价函数的直观理解" class="headerlink" title="代价函数的直观理解"></a>代价函数的直观理解</h2><blockquote>
+<ul>
+<li>假设函数：$h_\theta \left( x \right)=\theta_{0} + \theta_{1}x$</li>
+<li>参数：$\theta_{0}$, $\theta_{1}$</li>
+<li>代价函数：$J \left( \theta_0, \theta_1 \right) = \frac{1}{2m}\sum\limits_{i=1}^m \left( h_{\theta}(x^{(i)})-y^{(i)} \right)^{2}$</li>
+<li>目标：$\min_{\theta_{0},\theta_{1}}{J \left( \theta_0, \theta_1 \right) }$</li>
+</ul>
+</blockquote>
+<ol>
+<li><p>简化函数，令$\theta_{0} = 0$</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261056417.png" width="500"></p>
+</li>
+<li><p>原函数</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261345095.png" width="350"></p>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261345271.png" width="550"></p>
+</li>
+</ol>
+<h2 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>梯度下降是一种寻找目标函数最小化的算法。</p>
+<p>开始时从某个点$(\theta_{0}, \theta_{1})$出发，寻找下降速度最快的方向前进，并重复寻找方向和移动，直到到达局部最低点。</p>
+<p>梯度下降的特点有：起点的微小移动可能就会导致完全不同的局部最优解。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261358354.jpg" width="500"></p>
+<h3 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h3><p>梯度下降的公式为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261407833.png" width="400"></p>
+<blockquote>
+<ul>
+<li>$\alpha$ : 学习率，用于控制梯度下降时每次前进的步子有多大。</li>
+</ul>
+</blockquote>
+<p>注意：计算梯度下降公式时，$\theta_{0}, \theta_{1}$需要同步更新</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261421665.png" width="600"></p>
+<h3 id="公式详解"><a href="#公式详解" class="headerlink" title="公式详解"></a>公式详解</h3><ol>
+<li><p>学习率$\alpha$</p>
+<ul>
+<li><p>$\alpha$太小，移动速度很慢<br><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261432038.png" width="600"></p>
+</li>
+<li><p>$\alpha$太大，可能导致结果无法收敛甚至发散<br><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261434218.png" width="600"></p>
+</li>
+</ul>
+</li>
+<li><p>导数（斜率）$\frac{\partial }{\partial {\theta_{j} } }J\left(\theta \right)$</p>
+<p> 当$\theta_{0}$越靠近最小值，斜率越小，即越接近局部最低点梯度下降算法会自动采取更小的幅度进行移动，当到达最低点时，斜率为0，不再移动。</p>
+<p> 所以没有必要另外减小$\alpha$。</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203261444930.png" width="480"></p>
+</li>
+</ol>
+<h2 id="应用于线性回归的梯度下降算法"><a href="#应用于线性回归的梯度下降算法" class="headerlink" title="应用于线性回归的梯度下降算法"></a>应用于线性回归的梯度下降算法</h2><script type="math/tex; mode=display">
+\frac{\partial }{\partial { {\theta }_{j} } } J( { {\theta }_{0} }, { { \theta }_{1} } ) = \frac{ \partial }{\partial { { \theta }_{j} } }\frac{1}{2m}{ { \sum \limits_{i=1}^{m} {\left ( { {h}_{\theta } } ( { {x}^{ (i) } } )-{ {y}^{(i)} } \right) } }^{2}}</script><p>$j=0$  时：</p>
+<script type="math/tex; mode=display">
+\frac{\partial }{\partial { {\theta }_{0} } }J( { {\theta }_{0} },{ {\theta }_{1} } )=\frac{1}{m}{ {\sum\limits_{i=1}^{m}{\left( { {h}_{ \theta } }( { {x}^{ (i) } } )-{ {y}^{ (i) } } \right) } } }</script><p>$j=1$  时：</p>
+<script type="math/tex; mode=display">
+\frac{\partial }{\partial { {\theta }_{1} } }J( { {\theta }_{0} },{ {\theta }_{1} } )=\frac{1}{m}\sum\limits_{i=1}^{m}{\left( \left( { {h}_{\theta } }( { {x}^{ (i) } } )-{ {y}^{ (i) } } \right)\cdot { {x}^{ (i) } } \right) }</script><h3 id="公式-1"><a href="#公式-1" class="headerlink" title="公式"></a>公式</h3><p><strong>Repeat {</strong></p>
+<p>​                ${ \theta_{0} } := { \theta_{0} } - a\frac{1}{m}\sum\limits_{i=1}^{m}{ \left( { {h}_{\theta } } ( { {x}^{ (i) } } )-{ {y}^{ (i) } } \right) }$</p>
+<p>​                ${ \theta_{1} } := { \theta_{1} } - a\frac{1}{m}\sum\limits_{i=1}^{m}{\left( \left( { {h}_{\theta } }( { {x}^{ (i) } } )-{ {y}^{ (i) } } \right)\cdot { {x}^{ (i) } } \right) }$</p>
+<p>​               <strong>}</strong></p>
+<p>该算法又被称之为“Batch梯度下降（批量梯度下降”，指的是在梯度下降的每一步中，我们都用到了所有的训练样本。</p>
+<p>实际上，还存在一些其他的梯度下降算法，不考虑整个的训练集，而是每次只关注训练集中的一些小的子集。</p>
+<h1 id="线性代数回顾"><a href="#线性代数回顾" class="headerlink" title="线性代数回顾"></a>线性代数回顾</h1><h2 id="矩阵和向量"><a href="#矩阵和向量" class="headerlink" title="矩阵和向量"></a>矩阵和向量</h2><ul>
+<li><p><strong>矩阵</strong>：由数字组成的矩形阵列</p>
+</li>
+<li><p><strong>矩阵的维数</strong>：$行数 \times 列数$</p>
+</li>
+<li><p><strong>向量</strong>：向量是只有一列的矩阵，维数即向量的行数</p>
+</li>
+</ul>
+<h2 id="加法和标量乘法"><a href="#加法和标量乘法" class="headerlink" title="加法和标量乘法"></a>加法和标量乘法</h2><h2 id="矩阵向量乘法"><a href="#矩阵向量乘法" class="headerlink" title="矩阵向量乘法"></a>矩阵向量乘法</h2><h2 id="矩阵乘法"><a href="#矩阵乘法" class="headerlink" title="矩阵乘法"></a>矩阵乘法</h2><h2 id="矩阵乘法特征"><a href="#矩阵乘法特征" class="headerlink" title="矩阵乘法特征"></a>矩阵乘法特征</h2><h2 id="逆合转置"><a href="#逆合转置" class="headerlink" title="逆合转置"></a>逆合转置</h2>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/16/hexo+github/" rel="prev" title="hexo+github（自用）">
+      <i class="fa fa-chevron-left"></i> hexo+github（自用）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/03/15/%E7%AE%97%E6%B3%95/ACM%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%A1%86%E6%9E%B6%EF%BC%88%E5%BE%85%E6%95%B4%E7%90%86%EF%BC%89/" rel="next" title="ACM基础知识框架(待整理)">
+      ACM基础知识框架(待整理) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.1.</span> <span class="nav-text">监督学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.</span> <span class="nav-text">回归问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.2.</span> <span class="nav-text">分类问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.2.</span> <span class="nav-text">无监督学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95"><span class="nav-number">1.2.1.</span> <span class="nav-text">聚类算法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%95%E5%8F%98%E9%87%8F%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-number">2.</span> <span class="nav-text">单变量线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%A1%A8%E7%A4%BA"><span class="nav-number">2.1.</span> <span class="nav-text">模型表示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E4%BB%B7%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.</span> <span class="nav-text">代价函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E4%BB%B7%E5%87%BD%E6%95%B0%E7%9A%84%E7%9B%B4%E8%A7%82%E7%90%86%E8%A7%A3"><span class="nav-number">2.3.</span> <span class="nav-text">代价函数的直观理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D"><span class="nav-number">2.4.</span> <span class="nav-text">梯度下降</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5-1"><span class="nav-number">2.4.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F"><span class="nav-number">2.4.2.</span> <span class="nav-text">公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.4.3.</span> <span class="nav-text">公式详解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E4%BA%8E%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E7%9A%84%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%AE%97%E6%B3%95"><span class="nav-number">2.5.</span> <span class="nav-text">应用于线性回归的梯度下降算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F-1"><span class="nav-number">2.5.1.</span> <span class="nav-text">公式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E5%9B%9E%E9%A1%BE"><span class="nav-number">3.</span> <span class="nav-text">线性代数回顾</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E5%92%8C%E5%90%91%E9%87%8F"><span class="nav-number">3.1.</span> <span class="nav-text">矩阵和向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E6%B3%95%E5%92%8C%E6%A0%87%E9%87%8F%E4%B9%98%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">加法和标量乘法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E5%90%91%E9%87%8F%E4%B9%98%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">矩阵向量乘法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E4%B9%98%E6%B3%95"><span class="nav-number">3.4.</span> <span class="nav-text">矩阵乘法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E4%B9%98%E6%B3%95%E7%89%B9%E5%BE%81"><span class="nav-number">3.5.</span> <span class="nav-text">矩阵乘法特征</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%86%E5%90%88%E8%BD%AC%E7%BD%AE"><span class="nav-number">3.6.</span> <span class="nav-text">逆合转置</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="XYZinc"
+      src="/images/XYZinc.png">
+  <p class="site-author-name" itemprop="name">XYZinc</p>
+  <div class="site-description" itemprop="description">⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/XYZinc-xyx" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;XYZinc-xyx" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/XYZinc/" title="cnblogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;XYZinc&#x2F;" rel="noopener" target="_blank"><i class="fa fa-compass fa-fw"></i>cnblogs</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      friend_links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dextertyw.github.io/" title="https:&#x2F;&#x2F;dextertyw.github.io&#x2F;" rel="noopener" target="_blank">Tyw_ei</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://anoxiacxy.github.io/" title="https:&#x2F;&#x2F;anoxiacxy.github.io&#x2F;" rel="noopener" target="_blank">Anoxiacxy</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://skylark1003.gitee.io/" title="https:&#x2F;&#x2F;skylark1003.gitee.io&#x2F;" rel="noopener" target="_blank">Skylark</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XYZinc</span>
+</div>
+
+
+<!-- 底部的强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

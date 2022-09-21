@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="整理一下用过的python+OpenCV操作">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenCV整理">
+<meta property="og:url" content="http://example.com/2022/03/22/OpenCV%E6%95%B4%E7%90%86/index.html">
+<meta property="og:site_name" content="XYZinc&#39;s blog">
+<meta property="og:description" content="整理一下用过的python+OpenCV操作">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/人工智能实训项目复盘_绘制图形.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231429053.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231511049.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231540746.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231542985.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231936774.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231936809.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231940516.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231941531.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231952550.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203232054814.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203241057685.png">
+<meta property="article:published_time" content="2022-03-22T12:54:05.274Z">
+<meta property="article:modified_time" content="2022-04-22T09:36:47.194Z">
+<meta property="article:author" content="XYZinc">
+<meta property="article:tag" content="OpenCV">
+<meta property="article:tag" content="人脸识别">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/人工智能实训项目复盘_绘制图形.png">
+
+<link rel="canonical" href="http://example.com/2022/03/22/OpenCV%E6%95%B4%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>OpenCV整理 | XYZinc's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">XYZinc's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/22/OpenCV%E6%95%B4%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/XYZinc.png">
+      <meta itemprop="name" content="XYZinc">
+      <meta itemprop="description" content="⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XYZinc's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenCV整理
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-22 20:54:05" itemprop="dateCreated datePublished" datetime="2022-03-22T20:54:05+08:00">2022-03-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-22 17:36:47" itemprop="dateModified" datetime="2022-04-22T17:36:47+08:00">2022-04-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">技能</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">整理一下用过的python+OpenCV操作</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><blockquote>
+<p>python:使用python语言编写，需要先配置环境</p>
+<p>OpenCV:一个开源的计算机视觉库。</p>
+<p>任意一个python编译器，我用的PyCharm</p>
+</blockquote>
+<ol>
+<li><p><strong>python</strong><br> <a target="_blank" rel="noopener" href="https://www.python.org/">https://www.python.org/</a><br> Downloads直接下载</p>
+<p> 安装时勾选“Add Python to PATH”</p>
+</li>
+<li><p><strong>OpenCV</strong><br> win+r，窗口输入cmd</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">   *opencv: pip install opencv-python</span><br><span class="line">*opencv: pip install opencv-contrib-python</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>PyCharm</strong><br> <a href="jetbrains.com/pycharm/">jetbrains.com/pycharm/</a></p>
+</li>
+</ol>
+<h2 id="图像基本操作"><a href="#图像基本操作" class="headerlink" title="图像基本操作"></a>图像基本操作</h2><ol>
+<li><p><strong>读取图片</strong></p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入cv模块</span></span><br><span class="line"><span class="keyword">import</span> cv2 <span class="keyword">as</span> cv</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取图片</span></span><br><span class="line"><span class="comment"># opencv读取的图片为BGR格式</span></span><br><span class="line">img = cv.imread(<span class="string">&quot;test.png&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示图片</span></span><br><span class="line"><span class="comment"># imshow(&#x27;image&#x27;,img)创建一个窗口显示图像，image为窗口显示的名称，img为显示的图像</span></span><br><span class="line">cv.imshow(<span class="string">&quot;test.png&quot;</span>, img)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 等待，毫秒，0表示任意键终止</span></span><br><span class="line">cv.waitKey(<span class="number">0</span>)</span><br><span class="line"><span class="comment"># 释放内存</span></span><br><span class="line">cv.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>灰度图像</strong></p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cv.IMREAD_COLOR：彩色图像</span></span><br><span class="line"><span class="comment"># cv.IMREAD_GRAYSCALE：灰度图像   </span></span><br><span class="line">gray_img = cv.imread(<span class="string">&quot;test.png&quot;</span>, cv.IMREAD_GRAYSCALE)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>保存图片</strong></p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cv.imwrite(<span class="string">&quot;gray_test.png&quot;</span>, gray_img)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>尺寸修改</strong></p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">resize_img = cv.resize(img, dsize=(<span class="number">200</span>,<span class="number">200</span>))</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>绘制图形</strong></p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 绘制矩形</span></span><br><span class="line"><span class="comment"># cv.rectangle(绘制的图像, (左上角坐标x, y,矩形的长宽w, h), 颜色BGR，线条粗细)</span></span><br><span class="line">cv.rectangle(img, (x, y, x+w, y+h), color=(<span class="number">0</span>, <span class="number">0</span>, <span class="number">255</span>), thickness=<span class="number">1</span>)</span><br><span class="line"><span class="comment"># cv.rectangle(绘制的图像, pt1=(左上角坐标x,y), pt2=(右下角坐标x,y), 颜色，粗细)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制圆形</span></span><br><span class="line"><span class="comment"># cv.circle(绘制的图像，(圆心坐标x, y), 半径, 颜色, 粗细)</span></span><br><span class="line">cv.circle(img, center=(x, y), radius=<span class="number">100</span>, color=(<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>), thickness=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/人工智能实训项目复盘_绘制图形.png" width="450"></p>
+</li>
+<li><p><strong>读取视频</strong></p>
+</li>
+</ol>
+<ul>
+<li>cv.VideoCapture可以捕获摄像头，用数字来控制不同的设备</li>
+<li>如果是视频文件，直接指定路径即可  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读入视频文件</span></span><br><span class="line">vid = cv2.VideoCapture(<span class="string">&quot;test.mp4&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    flag, frame = vid.read()</span><br><span class="line">    <span class="comment"># 读完退出</span></span><br><span class="line">    <span class="keyword">if</span> flag == <span class="literal">False</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    cv2.imshow(<span class="string">&quot;frame&quot;</span>, frame) <span class="comment"># 显示当前帧</span></span><br><span class="line">    key = cv2.waitKey(<span class="number">1000</span>//<span class="number">24</span>) <span class="comment"># 1s24帧</span></span><br><span class="line">    <span class="comment"># 按键退出</span></span><br><span class="line">    <span class="comment"># ord(&#x27;X&#x27;) 获取X的uniq码</span></span><br><span class="line">    <span class="keyword">if</span> key == <span class="built_in">ord</span>(<span class="string">&#x27;q&#x27;</span>):</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">cv2.destroyAllWindows()</span><br><span class="line">vid.release() <span class="comment"># 释放视频流</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="图像、视频处理"><a href="#图像、视频处理" class="headerlink" title="图像、视频处理"></a>图像、视频处理</h2><ol>
+<li><p><strong>人脸识别</strong></p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 级联分类器</span></span><br><span class="line"><span class="comment"># 级联算法：图片中找人脸特征（研究，鼻子，嘴巴...），满足一部分特征，即算作人脸</span></span><br><span class="line"><span class="comment"># haarcascade_frontalface_alt.xml是OpenCV中一个训练好的人脸识别分类器</span></span><br><span class="line">face_detector = cv2.CascadeClassifier(<span class="string">&quot;haarcascade_frontalface_alt.xml&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检测人脸</span></span><br><span class="line"><span class="comment"># faces是一个坐标，左上角(x,y),宽w，高h</span></span><br><span class="line"><span class="comment"># detectMultiScale()是OpenCV人脸检测函数之一，可以通过使用不同的函数及调整参数，放宽或缩小检测的要求</span></span><br><span class="line">faces = face_detector.detectMultiScale(img)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> x,y,w,h <span class="keyword">in</span> faces: <span class="comment"># 遍历faces</span></span><br><span class="line">    <span class="comment"># 绘制矩形</span></span><br><span class="line">    cv2.rectangle(img, pt1=(x,y), pt2=(x+w, y+h), color=(<span class="number">0</span>,<span class="number">0</span>,<span class="number">255</span>), thickness=<span class="number">2</span>)</span><br><span class="line">    <span class="comment"># 绘制圆形</span></span><br><span class="line">    cv2.circle(img, center=(x+w//<span class="number">2</span>, y+h//<span class="number">2</span>), radius=h//<span class="number">2</span>, color=(<span class="number">0</span>,<span class="number">0</span>,<span class="number">255</span>), thickness=<span class="number">2</span>)</span><br><span class="line">    <span class="comment"># 显示文本</span></span><br><span class="line">    cv2.putText(img,</span><br><span class="line">            text = <span class="string">&quot;yr&quot;</span>, <span class="comment">#显示文本</span></span><br><span class="line">            org = (x,y), <span class="comment">#位置</span></span><br><span class="line">            fontFace = cv2.FONT_ITALIC, <span class="comment">#字体</span></span><br><span class="line">            fontScale = <span class="number">2</span>, <span class="comment">#字号</span></span><br><span class="line">            color = (<span class="number">0.0</span>,<span class="number">255</span>),</span><br><span class="line">            thickness = <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231429053.png" width="400"></p>
+<p> 人脸识别中通常使用灰度图像，保留人脸特征，数据量减小</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gray_img = cv2.cvtColor(img, code=cv2.COLOR_BGR2GRAY)</span><br><span class="line">face_detector = cv2.CascadeClassifier(<span class="string">&quot;haarcascade_frontalface_alt.xml&quot;</span>)</span><br><span class="line"><span class="comment"># 使用灰度图像检测</span></span><br><span class="line">faces = face_detector.detectMultiScale(gray_img)</span><br><span class="line"><span class="comment"># 绘制时使用彩色图像</span></span><br><span class="line"><span class="keyword">for</span> x,y,w,h <span class="keyword">in</span> faces:</span><br><span class="line">    cv2.rectangle(img, pt1=(x,y), pt2=(x+w, y+h), color=(<span class="number">0</span>,<span class="number">0</span>,<span class="number">255</span>), thickness=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>多张人脸识别</strong></p>
+<p> 与单张人脸识别代码相同，for循环遍历所有人脸数据</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">img = cv2.imread(<span class="string">&quot;test2.jpg&quot;</span>)</span><br><span class="line">gray_img = cv2.cvtColor(img, code=cv2.COLOR_BGR2GRAY)</span><br><span class="line"></span><br><span class="line">face_detector = cv2.CascadeClassifier(<span class="string">&quot;haarcascade_frontalface_alt.xml&quot;</span>)</span><br><span class="line">faces = face_detector.detectMultiScale(gray_img)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> x,y,w,h <span class="keyword">in</span> faces:</span><br><span class="line">    cv2.rectangle(img, pt1=(x,y), pt2=(x+w,y+h), color=(<span class="number">0</span>,<span class="number">0</span>,<span class="number">255</span>), thickness=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">cv2.imshow(<span class="string">&quot;faces&quot;</span>, img)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br><span class="line">cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231511049.png" width="700"></p>
+<p> <strong>某些多人照片无法全部识别，可以通过调整参数更改识别条件</strong></p>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231540746.png" width="700"></p>
+<ul>
+<li>scaleFactor<br>scaleFactor表示前后两次相继的扫描中，搜索窗口的缩放比例，默认为1.1，即每次搜索窗口依次扩大10%<br>该参数越大，缩放越大，越容易遗漏然连；参数越小，越细腻，越容易找到</li>
+<li>minNeighbors<br>minNeighbors表示构成检测目标的相邻矩形的最小个数，默认为3，即检测三次成功才算目标<br>该参数越大，检测条件越苛刻；参数越小，检测条件越宽松</li>
+<li><p>minSize/maxSize<br>minSize/maxSize分别表示检测时目标的最小/最大尺寸</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">faces = face_detector.detectMultiScale(gray_img, scaleFactor=<span class="number">1.1</span>, minNeighbors=<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231542985.png" width="700"></p>
+<p><strong>detectMultiScale2(), detectMultiScale3()使用方法类似，可自行查询</strong></p>
+</li>
+</ul>
+</li>
+<li><p><strong>图片马赛克</strong></p>
+<p> 先把人脸部分数据取出，隔几位保留一个，再放大回原大小</p>
+<ul>
+<li><p>cv2.resize()调整图片大小</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 抠出人脸</span></span><br><span class="line"><span class="keyword">for</span> x,y,w,h <span class="keyword">in</span> faces:</span><br><span class="line">    <span class="comment"># 图像：[高度, 宽度, 像素]</span></span><br><span class="line">    face = img[y:y+h, x:x+w] <span class="comment"># 只把人脸部分数据取出</span></span><br><span class="line">    face = face[::<span class="number">10</span>, ::<span class="number">10</span>] <span class="comment"># 每10个取1个</span></span><br><span class="line">    face = cv2.resize(face, dsize = (w,h)) <span class="comment"># 调整大小（缩放，模糊图像位置不准确）</span></span><br><span class="line">    img[y:y + h, x:x + w] = face</span><br></pre></td></tr></table></figure>
+<p>  <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231936774.png" width="400"></p>
+</li>
+<li><p>np.repeat()重复数据</p>
+<ul>
+<li>axis = 0, 沿y轴复制，增加行数</li>
+<li><p>axis = 1, 沿x轴复制，增加列数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> x,y,w,h <span class="keyword">in</span> faces:</span><br><span class="line">face = img[y:y+h, x:x+w]</span><br><span class="line">face = face[::<span class="number">10</span>, ::<span class="number">10</span>]</span><br><span class="line"><span class="comment"># 两个方向重复</span></span><br><span class="line">face = np.repeat(face, <span class="number">10</span>, axis = <span class="number">0</span>)</span><br><span class="line">face = np.repeat(face, <span class="number">10</span>, axis = <span class="number">1</span>)</span><br><span class="line">img[y:y+h, x:x+w] = face[:h, :w]</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231936809.png" width="400"></p>
+<p>对于多人图片，处理方法相同</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231940516.png" width="700">&lt;/img&gt;<br><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231941531.png" width="700"></p>
+</li>
+</ul>
+</li>
+<li><p>for循环直接替换</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> x,y,w,h <span class="keyword">in</span> faces:</span><br><span class="line">face = img[y:y+h, x:x+w]</span><br><span class="line">face = face[::<span class="number">10</span>, ::<span class="number">10</span>] <span class="comment"># 信息缺失的人脸</span></span><br><span class="line"><span class="comment"># for循环替换</span></span><br><span class="line">h2, w2 = face.shape[:<span class="number">2</span>] <span class="comment"># 获取模糊人脸的宽、高</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(h2):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(w2):</span><br><span class="line">        img[i*<span class="number">10</span>+y:(i+<span class="number">1</span>)*<span class="number">10</span>+y, j*<span class="number">10</span>+x:(j+<span class="number">1</span>)*<span class="number">10</span>+x] = face[i,j] <span class="comment"># 一个像素一个像素进行替换，1个face数据替换10个img数据</span></span><br></pre></td></tr></table></figure>
+<p>  <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203231952550.png" width="400"></p>
+</li>
+</ul>
+</li>
+<li><p><strong>替换</strong></p>
+<p> 和马赛克图片类似，将覆盖的内容改为想要替换的物体</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">star = cv2.imread(<span class="string">&quot;star.jpg&quot;</span>) <span class="comment"># 读入要替换的图片</span></span><br><span class="line"><span class="keyword">for</span> x,y,w,h <span class="keyword">in</span> faces:</span><br><span class="line">    star = cv2.resize(star, dsize=(w//<span class="number">6</span>, h//<span class="number">6</span>)) <span class="comment"># 调整star的大小</span></span><br><span class="line">    img[y:y+h//<span class="number">6</span>, x+<span class="number">5</span>*w//<span class="number">12</span>: x+<span class="number">5</span>*w//<span class="number">12</span>+w//<span class="number">6</span>] = star <span class="comment"># 将star放在额头正中间</span></span><br></pre></td></tr></table></figure>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203232054814.png" width="400"></p>
+<p> 加入判断语句，可以不对周围白色进行赋值</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(star)</span><br><span class="line"><span class="keyword">for</span> x,y,w,h <span class="keyword">in</span> faces:</span><br><span class="line">star = cv2.resize(star, dsize=(w//<span class="number">6</span>, h//<span class="number">6</span>))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(h//<span class="number">6</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(w//<span class="number">6</span>):</span><br><span class="line">        <span class="comment"># if (star[i,j] == 255).all(): # 白色，不赋值</span></span><br><span class="line">        <span class="keyword">if</span>(star[i,j] &gt; <span class="number">200</span>).<span class="built_in">all</span>(): <span class="comment"># 接近白色，不赋值</span></span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            img[i+y, j+x+<span class="number">5</span>*w//<span class="number">12</span>] = star[i,j]</span><br></pre></td></tr></table></figure>
+<p> <img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202203241057685.png" width="400"></p>
+</li>
+<li><p><strong>视频人脸识别</strong><br> 加入人脸识别后可以明显感觉出视频播放变慢，耗时操作为：扫描整张图片检测人脸<br> 即faces = face_detector.detecrMultiScale()</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">vid = cv2.VideoCapture(<span class="string">&quot;test4.mp4&quot;</span>)</span><br><span class="line"><span class="comment"># 使用分类器haarcascade_frontalface_alt.xml</span></span><br><span class="line">face_detector = cv2.CascadeClassifier(<span class="string">&quot;haarcascade_frontalface_alt.xml&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    flag, frame = vid.read()</span><br><span class="line">    <span class="keyword">if</span> flag == <span class="literal">False</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    <span class="comment"># 将当前帧转换为灰度图像再进行检测</span></span><br><span class="line">    gray_frame = cv2.cvtColor(frame, code = cv2.COLOR_BGR2GRAY)</span><br><span class="line">    faces = face_detector.detectMultiScale(gray_frame) <span class="comment"># 主要耗时语句</span></span><br><span class="line">    <span class="comment"># 打印矩形</span></span><br><span class="line">    <span class="keyword">for</span> x,y,w,h <span class="keyword">in</span> faces:</span><br><span class="line">        cv2.rectangle(frame, pt1=(x,y), pt2=(x+w, y+h), color=(<span class="number">0</span>,<span class="number">0</span>,<span class="number">255</span>), thickness=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    cv2.imshow(<span class="string">&quot;frame&quot;</span>, frame)</span><br><span class="line">    key = cv2.waitKey(<span class="number">1000</span>//<span class="number">24</span>)</span><br><span class="line">    <span class="comment"># 按键退出</span></span><br><span class="line">    <span class="comment"># ord(&#x27;X&#x27;) 获取X的uniq码</span></span><br><span class="line">    <span class="keyword">if</span> key == <span class="built_in">ord</span>(<span class="string">&#x27;q&#x27;</span>):</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">cv2.destroyAllWindows()</span><br><span class="line">vid.release() <span class="comment"># 释放视频流</span></span><br></pre></td></tr></table></figure>
+<p> 通过缩小图片尺寸，可以加快检测时间</p>
+</li>
+<li><p><strong>视频保存</strong></p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将原视频文件转化为黑白，再进行保存</span></span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"></span><br><span class="line">vid = cv2.VideoCapture(<span class="string">&quot;test4.mp4&quot;</span>)</span><br><span class="line"><span class="comment"># cv2.VideoWriter(文件保存的路径, 指定编码器. 视频帧率, 画面尺寸, 黑白/彩色)</span></span><br><span class="line"><span class="comment"># *&#x27;MP4V&#x27;表示将‘MP4V’隔开，变成&#x27;M&#x27; &#x27;P&#x27; &#x27;4&#x27; &#x27;V&#x27;</span></span><br><span class="line">writer = cv2.VideoWriter(filename = <span class="string">&quot;gray_test.mp4&quot;</span>, fourcc = cv2.VideoWriter_fourcc(*<span class="string">&#x27;MP4V&#x27;</span>), fps = <span class="number">24</span>, frameSize = (<span class="number">960</span>, <span class="number">520</span>)) <span class="comment"># 尺寸根据自己的视频进行修改</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    flag, frame = vid.read()</span><br><span class="line">    <span class="keyword">if</span> flag == <span class="literal">False</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    gray_frame = cv2.cvtColor(frame, code = cv2.COLOR_BGR2GRAY)</span><br><span class="line">    cv2.imshow(<span class="string">&quot;frame&quot;</span>, gray_frame)</span><br><span class="line">    writer.write(gray_frame) <span class="comment"># 存入黑白图片</span></span><br><span class="line">    key = cv2.waitKey(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">if</span> key == <span class="built_in">ord</span>(<span class="string">&#x27;q&#x27;</span>):</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">cv2.destroyAllWindows()</span><br><span class="line">vid.release()</span><br><span class="line">writer.release()</span><br></pre></td></tr></table></figure>
+<p> 按照以上代码执行，生成的gray_test.mp4文件无法打开，且检查属性会发现其大小大幅小于原视频大小。原因在于视频文件中对每一帧的存储应是[长，宽，颜色通道数]三维，而转换的灰度帧gray_frame只有二维，需要将其更改为三维再进行存储。</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    flag, frame = vid.read()</span><br><span class="line">    <span class="keyword">if</span> flag == <span class="literal">False</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    gray_frame = cv2.cvtColor(frame, code = cv2.COLOR_BGR2GRAY)</span><br><span class="line">    gray_frame = np.reshape(gray_frame, [<span class="number">520</span>, <span class="number">960</span>, <span class="number">1</span>]) <span class="comment"># 增加一维</span></span><br><span class="line">    gray_frame = np.repeat(gray_frame, <span class="number">3</span>, axis=-<span class="number">1</span>) <span class="comment"># 颜色通道数增加为3，因为3个通道值一样，显示黑白</span></span><br><span class="line">    cv2.imshow(<span class="string">&quot;frame&quot;</span>, gray_frame)</span><br><span class="line">    writer.write(gray_frame) <span class="comment"># 存入三维黑白图片</span></span><br><span class="line">    key = cv2.waitKey(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">if</span> key == <span class="built_in">ord</span>(<span class="string">&#x27;q&#x27;</span>):</span><br><span class="line">        <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>摄像头操作</strong></p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 人脸识别</span></span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"></span><br><span class="line">vid = cv2.VideoCapture(<span class="number">0</span>)</span><br><span class="line">face_detector = cv2.CascadeClassifier(<span class="string">&quot;haarcascade_frontalface_alt.xml&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    flag, frame = vid.read()</span><br><span class="line">    <span class="keyword">if</span> flag == <span class="literal">False</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    gray_frame = cv2.cvtColor(frame, code=cv2.COLOR_BGR2GRAY)</span><br><span class="line">    faces = face_detector.detectMultiScale(gray_frame)</span><br><span class="line">    <span class="keyword">for</span> x,y,w,h <span class="keyword">in</span> faces:</span><br><span class="line">        cv2.rectangle(frame, pt1=(x,y), pt2=(x+w,y+h), color=(<span class="number">0</span>,<span class="number">255</span>,<span class="number">255</span>), thickness=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    cv2.imshow(<span class="string">&quot;frame&quot;</span>, frame)</span><br><span class="line">    key = cv2.waitKey(<span class="number">10</span>)</span><br><span class="line">    <span class="keyword">if</span> key == <span class="built_in">ord</span>(<span class="string">&#x27;q&#x27;</span>):</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">cv2.destroyAllWindows()</span><br><span class="line">vid.release()</span><br></pre></td></tr></table></figure>
+<p> 替换，保存等均与视频处理相似</p>
+</li>
+</ol>
+<h2 id="人脸数据处理"><a href="#人脸数据处理" class="headerlink" title="人脸数据处理"></a>人脸数据处理</h2><ol>
+<li><p><strong>人脸采集</strong></p>
+<ul>
+<li>人脸检测：找到人脸，不需要分辨是谁</li>
+<li>人脸识别：判断这个人脸是谁，分辨，验证（比对相似特征，允许存在误差）<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"></span><br><span class="line">cap = cv2.VideoCapture(<span class="number">0</span>)</span><br><span class="line">face_detector = cv2.CascadeClassifier(<span class="string">&quot;haarcascade_frontalface_alt.xml&quot;</span>)</span><br><span class="line">fileid = <span class="number">1</span> <span class="comment"># 记录存储图片的编号</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    flag, frame = cap.read()</span><br><span class="line">    <span class="keyword">if</span> flag == <span class="literal">False</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    gray_frame = cv2.cvtColor(frame, code=cv2.COLOR_BGR2GRAY)</span><br><span class="line">    faces = face_detector.detectMultiScale(gray_frame)</span><br><span class="line">    <span class="keyword">for</span> x,y,w,h <span class="keyword">in</span> faces:</span><br><span class="line">        <span class="comment"># 获取人脸，调整尺寸，保存</span></span><br><span class="line">        face = gray_frame[y:y+h, x:x+w]</span><br><span class="line">        face = cv2.resize(face, dsize=(<span class="number">64</span>, <span class="number">64</span>))</span><br><span class="line">        cv2.imwrite(<span class="string">&#x27;faces/name/%d.jpg&#x27;</span>%(fileid),face) <span class="comment"># 文件夹好像得提前建好，没建的时候保存不下来</span></span><br><span class="line">        fileid += <span class="number">1</span></span><br><span class="line">        cv2.rectangle(frame, pt1=(x, y), pt2=(x+w, y+h), color=(<span class="number">0</span>,<span class="number">0</span>,<span class="number">255</span>), thickness=<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">if</span> fileid &gt; <span class="number">30</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    cv2.imshow(<span class="string">&quot;face&quot;</span>, frame)</span><br><span class="line">    cv2.waitKey(<span class="number">1000</span>//<span class="number">24</span>)</span><br><span class="line"></span><br><span class="line">cv2.destroyAllWindows()</span><br><span class="line">cap.release()</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p><strong>人脸识别</strong><br> 1) 首先将按照1采集到的人脸照片转化为numpy数组格式，以便后续处理</p>
+<pre><code> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义了一个方法</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_data</span>():</span></span><br><span class="line">    <span class="comment"># os.listdir(path) 返回指定路径下的文件列表</span></span><br><span class="line">    listdir = os.listdir(<span class="string">&#x27;./faces&#x27;</span>)</span><br><span class="line">    <span class="comment"># print(listdir) # 查看listdir</span></span><br><span class="line">    names = [d <span class="keyword">for</span> d <span class="keyword">in</span> listdir]</span><br><span class="line">    faces = [] <span class="comment"># 记录图片信息</span></span><br><span class="line">    target = [i <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(names))]*<span class="number">30</span> <span class="comment"># 记录图片所属人物编号</span></span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">dir</span> <span class="keyword">in</span> names:  <span class="comment"># 遍历所有人</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">31</span>):</span><br><span class="line">            img = cv2.imread(<span class="string">&quot;./faces/%s/%d.jpg&quot;</span> % (<span class="built_in">dir</span>, i))</span><br><span class="line">            img_ = img[:, :, <span class="number">0</span>]  <span class="comment"># 取成二维数组</span></span><br><span class="line">            cv2.imshow(<span class="string">&quot;face&quot;</span>, img)</span><br><span class="line">            faces.append(img_)  <span class="comment"># 将目标文件添加到列表末尾</span></span><br><span class="line">            <span class="comment"># target.append(index) # 记录当前图片所属人物编号</span></span><br><span class="line">    faces = np.asarray(faces)</span><br><span class="line">    target = np.asarray(target)</span><br><span class="line">    target.sort()</span><br><span class="line">    <span class="keyword">return</span> faces, target, names</span><br></pre></td></tr></table></figure>
+</code></pre><p> 2) 将人脸数据分为两部分，用以训练和测试</p>
+<pre><code> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">split_data</span>(<span class="params">faces, target</span>):</span></span><br><span class="line">    index = np.arange(<span class="number">90</span>)</span><br><span class="line">    <span class="comment"># 打乱数据</span></span><br><span class="line">    np.random.shuffle(index)</span><br><span class="line">    faces = faces[index]</span><br><span class="line">    target = target[index]</span><br><span class="line">    <span class="comment"># 训练数据，测试数据</span></span><br><span class="line">    X_train, X_test = face[:<span class="number">70</span>], faces[<span class="number">70</span>:]</span><br><span class="line">    <span class="comment"># 目标值，Y_test是X_test的真实值</span></span><br><span class="line">    Y_train, Y_test = target[:<span class="number">70</span>], target[<span class="number">70</span>:]</span><br><span class="line">    <span class="keyword">return</span> X_train, X_test, Y_train, Y_test</span><br></pre></td></tr></table></figure>
+</code></pre><p> 完整代码如下：</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_data</span>():</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">split_data</span>(<span class="params">faces, target</span>):</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="comment"># 1.加载数据，返回目标值</span></span><br><span class="line">    faces, target, names = load_data()</span><br><span class="line">    <span class="comment"># 2.数据拆分</span></span><br><span class="line">    X_train, X_test, Y_train, Y_test = split_data(faces, target)</span><br><span class="line">    <span class="comment"># 3.加载算法</span></span><br><span class="line">    face_recognizer = cv2.face.EigenFaceRecognizer_create()</span><br><span class="line">    <span class="comment"># 4.训练</span></span><br><span class="line">    face_recognizer.train(X_train, Y_train)</span><br><span class="line">    <span class="comment"># 5.使用算法进行预测</span></span><br><span class="line">    <span class="keyword">for</span> face <span class="keyword">in</span> X_test:</span><br><span class="line">        <span class="comment"># 返回的预测值是编号，需要找到对应名字</span></span><br><span class="line">        <span class="comment"># face_recognizer.predict()返回值为(类别，置信度)，置信度表示差距，越小越好</span></span><br><span class="line">        y_id, confidence = face_recognizer.predict(face)</span><br><span class="line">        name = names[y_id]</span><br><span class="line">        <span class="built_in">print</span>(name)</span><br><span class="line">        cv2.imshow(<span class="string">&quot;face&quot;</span>, face)</span><br><span class="line">        key = cv2.waitKey(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">if</span> key == <span class="built_in">ord</span>(<span class="string">&#x27;q&#x27;</span>):</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/OpenCV/" rel="tag"># OpenCV</a>
+              <a href="/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" rel="tag"># 人脸识别</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/19/%E7%AE%97%E6%B3%95/%E5%89%8D%E7%BC%80%E5%92%8C&%E5%B7%AE%E5%88%86/" rel="prev" title="前缀和 & 差分">
+      <i class="fa fa-chevron-left"></i> 前缀和 & 差分
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/03/25/%E7%AC%94%E8%AE%B0/YOLOv4-Tiny%E7%90%86%E8%A7%A3%E7%AC%94%E8%AE%B0/" rel="next" title="YOLOv4-Tiny理解笔记">
+      YOLOv4-Tiny理解笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">环境配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">图像基本操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E3%80%81%E8%A7%86%E9%A2%91%E5%A4%84%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">图像、视频处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%BA%E8%84%B8%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">人脸数据处理</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="XYZinc"
+      src="/images/XYZinc.png">
+  <p class="site-author-name" itemprop="name">XYZinc</p>
+  <div class="site-description" itemprop="description">⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/XYZinc-xyx" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;XYZinc-xyx" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/XYZinc/" title="cnblogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;XYZinc&#x2F;" rel="noopener" target="_blank"><i class="fa fa-compass fa-fw"></i>cnblogs</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      friend_links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dextertyw.github.io/" title="https:&#x2F;&#x2F;dextertyw.github.io&#x2F;" rel="noopener" target="_blank">Tyw_ei</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://anoxiacxy.github.io/" title="https:&#x2F;&#x2F;anoxiacxy.github.io&#x2F;" rel="noopener" target="_blank">Anoxiacxy</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://skylark1003.gitee.io/" title="https:&#x2F;&#x2F;skylark1003.gitee.io&#x2F;" rel="noopener" target="_blank">Skylark</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XYZinc</span>
+</div>
+
+
+<!-- 底部的强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

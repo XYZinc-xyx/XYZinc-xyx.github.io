@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="视频图像压缩——时间冗余">
+<meta property="og:type" content="article">
+<meta property="og:title" content="时间&#x2F;空间冗余——帧间预测编码">
+<meta property="og:url" content="http://example.com/2022/05/31/%E7%AC%94%E8%AE%B0/%E8%A7%86%E9%A2%91%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%E2%80%94%E2%80%94%E6%97%B6%E7%A9%BA%E5%86%97%E4%BD%99/index.html">
+<meta property="og:site_name" content="XYZinc&#39;s blog">
+<meta property="og:description" content="视频图像压缩——时间冗余">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205301948447.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205302006099.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311421438.png">
+<meta property="article:published_time" content="2022-05-31T02:04:12.929Z">
+<meta property="article:modified_time" content="2022-05-31T08:15:36.441Z">
+<meta property="article:author" content="XYZinc">
+<meta property="article:tag" content="多媒体">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205301948447.png">
+
+<link rel="canonical" href="http://example.com/2022/05/31/%E7%AC%94%E8%AE%B0/%E8%A7%86%E9%A2%91%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%E2%80%94%E2%80%94%E6%97%B6%E7%A9%BA%E5%86%97%E4%BD%99/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>时间/空间冗余——帧间预测编码 | XYZinc's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">XYZinc's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/31/%E7%AC%94%E8%AE%B0/%E8%A7%86%E9%A2%91%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%E2%80%94%E2%80%94%E6%97%B6%E7%A9%BA%E5%86%97%E4%BD%99/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/XYZinc.png">
+      <meta itemprop="name" content="XYZinc">
+      <meta itemprop="description" content="⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XYZinc's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          时间/空间冗余——帧间预测编码
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-31 10:04:12 / 修改时间：16:15:36" itemprop="dateCreated datePublished" datetime="2022-05-31T10:04:12+08:00">2022-05-31</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">视频图像压缩——时间冗余</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="帧间预测编码的运动估计"><a href="#帧间预测编码的运动估计" class="headerlink" title="帧间预测编码的运动估计"></a>帧间预测编码的运动估计</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
+<li><p>运动估计：对两帧图像之间的运动位移进行估计（<strong>只有编码时需要运动估计</strong>）</p>
+</li>
+<li><p>运动补偿：根据估计得到的运动位移对图像进行对齐</p>
+</li>
+<li><p>目的：引入运动估计，就是为了<strong>减少</strong>帧间预测编码<strong>残差图像</strong>所包含的<strong>信息量</strong>，进而达到数据<strong>压缩</strong>的目的</p>
+</li>
+</ul>
+<h2 id="基于块的运动估计"><a href="#基于块的运动估计" class="headerlink" title="基于块的运动估计"></a>基于块的运动估计</h2><ul>
+<li><p>将视频的每一帧分成许多互不重叠的<strong>宏块</strong>（16*16像素图像块）</p>
+</li>
+<li><p>对每个宏块到参考帧某一给定特定搜索范围内根据一定的<strong>匹配准则</strong>找出与当前块<strong>最相似的块</strong>，即<strong>匹配块</strong></p>
+</li>
+<li><p>匹配块与当前块的相对位移即为<strong>运动矢量</strong>，和残差数据均要写入压缩流</p>
+</li>
+</ul>
+<h2 id="运动估计的匹配准则"><a href="#运动估计的匹配准则" class="headerlink" title="运动估计的匹配准则"></a>运动估计的匹配准则</h2><p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205301948447.png" width="400"></p>
+<h2 id="运动估计算法"><a href="#运动估计算法" class="headerlink" title="运动估计算法"></a>运动估计算法</h2><ol>
+<li><p>运动估计全搜索算法</p>
+<ul>
+<li><p>按一定的顺序计算出搜索窗口内<strong>所有像素点</strong>的SAD 值，找出SAD最小的点所在的位置作为运动矢量</p>
+</li>
+<li><p>最简单、最原始，能得到<strong>全局最优</strong>结果，但<strong>计算量非常大</strong></p>
+</li>
+</ul>
+</li>
+<li><p>运动估计快速算法</p>
+<ul>
+<li><p>不再搜索窗口内所有像素点，而是通过搜索窗口内<strong>少数像素点</strong>就达到与<strong>全搜索接近</strong>的准确度</p>
+</li>
+<li><p>基本思想：石油勘探时可在各方向分别选择一个点去勘探，看哪个方向油量最多，就在那个方向附近再进一步勘探，其他方向就不再勘探了</p>
+</li>
+<li><p><strong>计算量小，近似全局最优</strong></p>
+</li>
+</ul>
+</li>
+<li><p>三步搜索法</p>
+<ul>
+<li><p>以窗口中心为中心，<strong>步长为4</strong>，进行周围8个点搜索，得到一个最佳匹配点，共搜索了9个点</p>
+</li>
+<li><p>以上一步最佳匹配点为中心，<strong>步长为2</strong>，继续搜索周围8个点得到最佳匹配点，共搜索了8个点</p>
+</li>
+<li><p>同上一步，只是<strong>步长为1</strong>，最后得到的最佳匹配点就是最终匹配点</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205302006099.png" width="200"></p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="运动估计与块大小"><a href="#运动估计与块大小" class="headerlink" title="运动估计与块大小"></a>运动估计与块大小</h2><p>通常一个块内可能有多个运动趋势，所以 $16 \times 16$运动估计的残差信息量很大</p>
+<p>但并不是运动估计的运动估计的基本单元块大小越小对压缩就越好，分块变小后数据量也会增加</p>
+<blockquote>
+<p><strong>分块变小后数据量增加的原因：</strong><br><strong>匹配数量不变，运动矢量数增多</strong></p>
+</blockquote>
+<ul>
+<li><p>如何快速准确的选择运动估计的块大小模式？</p>
+</li>
+<li><p>可用的自适应策略：</p>
+<ul>
+<li><p>先匹配大块，若超出设定值，再进行细分</p>
+</li>
+<li><p>计算方差（即图的平坦/光滑程度），方差小选大块，方差大选小块</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="视频预测编码"><a href="#视频预测编码" class="headerlink" title="视频预测编码"></a>视频预测编码</h1><h2 id="帧间-帧内预测"><a href="#帧间-帧内预测" class="headerlink" title="帧间/帧内预测"></a>帧间/帧内预测</h2><ul>
+<li><p>帧间预测：预测值是<strong>时间上</strong>相邻的图像像素值，去除的是<strong>时间冗余</strong></p>
+</li>
+<li><p>帧内预测：预测值是<strong>空间上</strong>相邻的图像像素值，去除的是<strong>空间冗余</strong></p>
+</li>
+<li><p>相同点</p>
+<ul>
+<li>编码端：原始值－预测值＝差值</li>
+<li>解码端：差值＋预测值＝原始值</li>
+</ul>
+</li>
+<li><p>不同点</p>
+<ul>
+<li>帧间预测根据运动趋势估计，需要进行运动估计得到运动矢量</li>
+<li>帧内预测根据纹理方向估计，不需要进行运动估计</li>
+</ul>
+</li>
+</ul>
+<h2 id="静止图像的二维预测编码"><a href="#静止图像的二维预测编码" class="headerlink" title="静止图像的二维预测编码"></a>静止图像的二维预测编码</h2><p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202205311421438.png" width="400"></p>
+<h2 id="视频帧类型"><a href="#视频帧类型" class="headerlink" title="视频帧类型"></a>视频帧类型</h2><ol>
+<li><p>类型</p>
+<ul>
+<li><p>I帧：不能进行帧间预测，只能进行帧内预测，基本选项（关键帧）</p>
+</li>
+<li><p>P帧：可以进行前向帧间预测，基本选项</p>
+</li>
+<li><p>B帧：可以进行双向帧间预测，高级选项</p>
+</li>
+<li><p>第一帧类型为I帧，其他帧类型由<strong>人工设置参数决定</strong>（视频帧类型是提前设定好的，无法自适应调整）</p>
+</li>
+</ul>
+</li>
+<li><p>特点</p>
+<ul>
+<li><p>I帧不能去除时间冗余，只能去除空间冗余；P帧可以去除时间冗余</p>
+</li>
+<li><p><strong>一般情况下</strong>，：视频帧的时间冗余多于空间冗余，<strong>I帧数据量大于P帧</strong>；特殊情况下，视频帧的时间和空间冗余均较多，I帧P帧数据量均较少</p>
+</li>
+</ul>
+</li>
+<li><p>视频帧类型选择</p>
+<p> 普遍情况下，全P帧数据量小。</p>
+<p> 问题在于：</p>
+<ul>
+<li><p>只能顺序解码</p>
+<p>  <strong>全P帧</strong>会导致视频只能从第一帧开始解码播放，<strong>不能拖动进度条</strong>从后续某一帧开始解码播放。</p>
+<p>  应当<strong>插入I帧</strong>以保证可以<strong>从后续某一帧开始解码播放</strong>。</p>
+</li>
+<li><p>容错率低</p>
+<p>  <strong>全P帧</strong>会导致视频某一帧的<strong>误码会在时域上逐帧扩散</strong>。</p>
+<p>  应当<strong>插入I帧</strong>以保证<strong>误码的时域扩散被终止</strong>。</p>
+</li>
+<li><p>场景切换</p>
+<p>  视频中前一帧与后一帧图像发生了内容切换，时域上相邻的两帧图像之间<strong>没有时间相关性</strong>，几乎无法起到去冗余的效果</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="视频宏块类型"><a href="#视频宏块类型" class="headerlink" title="视频宏块类型"></a>视频宏块类型</h2><ol>
+<li><p>类型</p>
+<ul>
+<li><p>Intra宏块：进行<strong>帧内预测</strong>的16*16像素图像块</p>
+</li>
+<li><p>Inter宏块：进行<strong>帧间预测</strong>的16*16像素图像块</p>
+</li>
+</ul>
+</li>
+<li><p>帧类型与宏块类型的关系</p>
+<ul>
+<li><p>I帧：<strong>所有</strong>宏块均为<strong>Intra宏块</strong>，不能进行帧间预测，只能进行帧内预测</p>
+</li>
+<li><p>P帧：宏块可以为<strong>Inter宏块</strong>，进行帧间预测，也可以为<strong>Intra宏块</strong>，进行帧内预测</p>
+</li>
+<li><p>P帧中的Intra宏块</p>
+<ul>
+<li>当前帧出现了前一帧未出现的新目标，新目标与前一帧没有时间相关性</li>
+<li>目标连续，但当前帧中目标运动太过剧烈，目标与前一帧时 间相关性太弱</li>
+<li>当前帧内容自身过于简单相似，空间相关性太强</li>
+<li><strong>总结</strong>：P帧中宏块类型的选择是时间相关性（时间冗余）和空间相关性（空间冗余）的比较。时间相关性越强，时间冗余越多，就应该Inter宏块类型；空间相关性越强，空间冗余越多，就应该Intra宏块类型</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%9A%E5%AA%92%E4%BD%93/" rel="tag"># 多媒体</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/05/31/%E5%85%B3%E4%BA%8E%E6%96%87%E7%AB%A0%E5%9B%BE%E7%89%87%E4%B8%8D%E6%98%BE%E7%A4%BA%E7%9A%84%E9%97%AE%E9%A2%98/" rel="prev" title="关于文章图片不显示的问题">
+      <i class="fa fa-chevron-left"></i> 关于文章图片不显示的问题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/07/01/%E5%8A%A8%E6%80%81%E6%97%B6%E9%97%B4%E8%A7%84%E6%95%B4%E2%80%94%E2%80%94DTW%E7%AE%97%E6%B3%95/" rel="next" title="动态时间规整——DTW算法">
+      动态时间规整——DTW算法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%A7%E9%97%B4%E9%A2%84%E6%B5%8B%E7%BC%96%E7%A0%81%E7%9A%84%E8%BF%90%E5%8A%A8%E4%BC%B0%E8%AE%A1"><span class="nav-number">1.</span> <span class="nav-text">帧间预测编码的运动估计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%9D%97%E7%9A%84%E8%BF%90%E5%8A%A8%E4%BC%B0%E8%AE%A1"><span class="nav-number">1.2.</span> <span class="nav-text">基于块的运动估计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E5%8A%A8%E4%BC%B0%E8%AE%A1%E7%9A%84%E5%8C%B9%E9%85%8D%E5%87%86%E5%88%99"><span class="nav-number">1.3.</span> <span class="nav-text">运动估计的匹配准则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E5%8A%A8%E4%BC%B0%E8%AE%A1%E7%AE%97%E6%B3%95"><span class="nav-number">1.4.</span> <span class="nav-text">运动估计算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E5%8A%A8%E4%BC%B0%E8%AE%A1%E4%B8%8E%E5%9D%97%E5%A4%A7%E5%B0%8F"><span class="nav-number">1.5.</span> <span class="nav-text">运动估计与块大小</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E9%A2%84%E6%B5%8B%E7%BC%96%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">视频预测编码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%A7%E9%97%B4-%E5%B8%A7%E5%86%85%E9%A2%84%E6%B5%8B"><span class="nav-number">2.1.</span> <span class="nav-text">帧间&#x2F;帧内预测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%99%E6%AD%A2%E5%9B%BE%E5%83%8F%E7%9A%84%E4%BA%8C%E7%BB%B4%E9%A2%84%E6%B5%8B%E7%BC%96%E7%A0%81"><span class="nav-number">2.2.</span> <span class="nav-text">静止图像的二维预测编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%B8%A7%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.3.</span> <span class="nav-text">视频帧类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%AE%8F%E5%9D%97%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.4.</span> <span class="nav-text">视频宏块类型</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="XYZinc"
+      src="/images/XYZinc.png">
+  <p class="site-author-name" itemprop="name">XYZinc</p>
+  <div class="site-description" itemprop="description">⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/XYZinc-xyx" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;XYZinc-xyx" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/XYZinc/" title="cnblogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;XYZinc&#x2F;" rel="noopener" target="_blank"><i class="fa fa-compass fa-fw"></i>cnblogs</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      friend_links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dextertyw.github.io/" title="https:&#x2F;&#x2F;dextertyw.github.io&#x2F;" rel="noopener" target="_blank">Tyw_ei</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://anoxiacxy.github.io/" title="https:&#x2F;&#x2F;anoxiacxy.github.io&#x2F;" rel="noopener" target="_blank">Anoxiacxy</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://skylark1003.gitee.io/" title="https:&#x2F;&#x2F;skylark1003.gitee.io&#x2F;" rel="noopener" target="_blank">Skylark</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XYZinc</span>
+</div>
+
+
+<!-- 底部的强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
