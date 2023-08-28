@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="卡尔曼滤波">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kalman滤波">
+<meta property="og:url" content="http://example.com/2023/08/29/Kalman%EF%BC%88%E5%8D%A1%E5%B0%94%E6%9B%BC%EF%BC%89%E6%BB%A4%E6%B3%A2/index.html">
+<meta property="og:site_name" content="XYZinc&#39;s blog">
+<meta property="og:description" content="卡尔曼滤波">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202207081338996.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202207081338006.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202207081339485.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202207081339488.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202207192216210.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202207081341870.png">
+<meta property="article:published_time" content="2023-08-28T23:22:47.913Z">
+<meta property="article:modified_time" content="2022-08-09T15:36:41.477Z">
+<meta property="article:author" content="XYZinc">
+<meta property="article:tag" content="卡尔曼滤波">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202207081338996.png">
+
+<link rel="canonical" href="http://example.com/2023/08/29/Kalman%EF%BC%88%E5%8D%A1%E5%B0%94%E6%9B%BC%EF%BC%89%E6%BB%A4%E6%B3%A2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Kalman滤波 | XYZinc's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">XYZinc's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/29/Kalman%EF%BC%88%E5%8D%A1%E5%B0%94%E6%9B%BC%EF%BC%89%E6%BB%A4%E6%B3%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/XYZinc.png">
+      <meta itemprop="name" content="XYZinc">
+      <meta itemprop="description" content="⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XYZinc's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kalman滤波
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-29 07:22:47" itemprop="dateCreated datePublished" datetime="2023-08-29T07:22:47+08:00">2023-08-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-09 23:36:41" itemprop="dateModified" datetime="2022-08-09T23:36:41+08:00">2022-08-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">卡尔曼滤波</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>百度百科：</p>
+<p>卡尔曼滤波（Kalman filtering）是一种利用<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/线性系统/6814705">线性系统</a>状态方程，通过系统输入输出观测数据，对<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/系统状态/896358">系统状态</a>进行最优估计的算法。由于观测数据中包括系统中的噪声和干扰的影响，所以最优估计也可看作是<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/滤波/2938301">滤波</a>过程。</p>
+</blockquote>
+<h1 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h1><h2 id="栗子"><a href="#栗子" class="headerlink" title="栗子"></a>栗子</h2><p>在了解卡曼滤波之前，先设想这样一个场景：有一辆小车，初始位置已知，由于某些因素，我们所知的这个位置并不是确定点，而是存在一定误差，我们认为其位置服从正态分布（不知道为啥是正态分布QAQ）。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202207081338996.png" width="500"></p>
+<p>小车的速度已知，所以我们可以根据这个初始位置估计一段时间后小车的位置，这个估计的位置也服从正态分布。由于小车的速度不一定恒定，也可能存在路况等因素的影响，这次位置的不确定性更大，体现在正态分布上即方差更大，函数图像更宽。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202207081338006.png" width="500"></p>
+<p>依靠估计来获取小车的位置显然是不太可靠的，所以在小车上安装了雷达装置用以测量小车的位置。雷达测量的数据也不完全准确，我们依然认为其服从正态分布。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202207081339485.png" width="500"></p>
+<p>这时，对于小车的新位置，我们拥有两个不同的结果。这两个结果都有其可靠性但也都不完全可靠，如果我们能将这两个结果进行某种结合，得到的新预测值就会更加接近小车的真实位置。Kalman滤波的实质就是将这两个正态分布进行加权平均，得到更接近真实情况的一个新的正态分布。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202207081339488.png" width="500"></p>
+<h2 id="另一个栗子"><a href="#另一个栗子" class="headerlink" title="另一个栗子"></a>另一个栗子</h2><p>还有一个更简单的例子来理解Kalman滤波的加权平均思想。</p>
+<p>假设有一个质量为m的物体，现想知道物体的重力大小。你有两个弹簧测力计，问题在于这两个测力计测出的重力值不同，应该如何得到更准确的值？最好的办法是将它们<strong>取平均值</strong>。</p>
+<p>但如果这两个弹簧测力计，一个较为精确价格高昂，另一个则非常便宜，那对于测量出的两个不同值，我们更倾向于相信贵的所测量的结果。这时我们针对这两个数据，就不是完全的取平均，而是有倾向的<strong>取加权平均</strong>。</p>
+<p>问题回到预测和测量。根据所学的物理知识，你知道G = mg(g = 9.8)，所以你认为这个物体的重力为G1。现在你手上有一个弹簧测力计，测量出来的重力为G2。如何取G1和G2的加权平均，取决于你对g=9.8的<strong>确信度</strong>，你对g的确信度越大，它在取加权平均时对应的权值就越大，反之则越小。这个权值在Kalman滤波中也被称之为Kalman系数。</p>
+<h1 id="公式推导"><a href="#公式推导" class="headerlink" title="公式推导"></a>公式推导</h1><p>在上例中，我们记小车真实的状态为 $x_k$</p>
+<p>我们对其状态的估计（红色部分）称为先验估计，因为它是不完整的，还需要后续的调整$\hat{x}_k^-$</p>
+<p>通过雷达，我们测量得到小车状态（灰色部分），记为$y_k$</p>
+<p>在经过雷达测量后，我们再次对小车的状态进行最终预测（绿色部分），称为后验估计$\hat{x}_k$</p>
+<p>假设我们对监测数据和估计数据的信任程度三七开，则</p>
+<script type="math/tex; mode=display">
+\hat{x}_k = 0.3 \times y_k + (1 - 0.3) \times \hat{x}_k^- = \hat{x}_k^- + 0.3 \times (y_k - \hat{x}_k^-)</script><p>将这里的0.3用参数K表示，K即为Kalman系数（K越大，表示越信任监测值）</p>
+<h2 id="如何获取状态值"><a href="#如何获取状态值" class="headerlink" title="如何获取状态值"></a>如何获取状态值</h2><p><strong>状态公式：</strong></p>
+<script type="math/tex; mode=display">
+x_{k} = A x_{k-1} + B u_k</script><p>​        其中，A表示状态转移矩阵，表示如何从上一时刻状态推算当前时刻状态；B为控制矩阵，表示控制量u如何作用于当前状态</p>
+<p>以小车为例，假设小车速度为v，加速度为a，间隔时间为t，小车的位置可得：</p>
+<script type="math/tex; mode=display">
+x_k = x_{k-1} + t \times v_{k-1} + \frac{t^2}{2} \times a_{k-1}</script><ul>
+<li><p>位置和速度构成小车的状态</p>
+<script type="math/tex; mode=display">
+X = 
+\begin{bmatrix}
+x \\
+v
+\end{bmatrix}</script></li>
+<li><p>加速度作为控制量作用于当前状态</p>
+<script type="math/tex; mode=display">
+u = a</script></li>
+<li><p>状态转移矩阵为</p>
+</li>
+</ul>
+<script type="math/tex; mode=display">
+A = 
+\begin{bmatrix}
+1 & t \\
+0 & 1
+\end{bmatrix}</script><ul>
+<li>控制矩阵为：<script type="math/tex; mode=display">
+B = 
+\begin{bmatrix}
+\frac{1}{2} t^2\\
+t
+\end{bmatrix}</script></li>
+</ul>
+<p>测量值和真实值之间存在某种映射关系，我们将其记为H，<strong>测量方程即为：</strong></p>
+<script type="math/tex; mode=display">
+y_k = H x_k</script><h2 id="如何获取预测值的不确定性"><a href="#如何获取预测值的不确定性" class="headerlink" title="如何获取预测值的不确定性"></a>如何获取预测值的不确定性</h2><p>在真实环境中，无论是估计还是测量都带有一定误差，我们将其视为高斯分布的噪声W，V</p>
+<script type="math/tex; mode=display">
+\begin{cases}
+x_{k} = A x_{k-1} + B u_k + W \\
+y_k = H x_k + V
+\end{cases}</script><script type="math/tex; mode=display">
+W \sim N(0, Q) \\
+V \sim N(0, R)</script><h3 id="对于估计值"><a href="#对于估计值" class="headerlink" title="对于估计值"></a>对于估计值</h3><p>根据状态公式，我们的估计值为：</p>
+<script type="math/tex; mode=display">
+\hat{x}^-_{k} = A \hat{x}_{k-1} + B u_k</script><p>先验估计误差：</p>
+<script type="math/tex; mode=display">
+e_k^- = x_k - \hat{x}_k^-</script><p>先验估计误差协方差：</p>
+<script type="math/tex; mode=display">
+p_k^- = E [e_k^- e_k^{-T}]</script><p>经过推理计算，会得到以下预测公式</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202207192216210.png" width="500"></p>
+<ul>
+<li><strong>协方差预测公式</strong><script type="math/tex; mode=display">
+{p}^-_k = A p_{k-1} A^T + Q</script></li>
+</ul>
+<h3 id="对于测量值"><a href="#对于测量值" class="headerlink" title="对于测量值"></a>对于测量值</h3><p>显然，测量值的方差为常数R</p>
+<h2 id="如何获取Kalman增益（参数K）"><a href="#如何获取Kalman增益（参数K）" class="headerlink" title="如何获取Kalman增益（参数K）"></a>如何获取Kalman增益（参数K）</h2><p><strong>Kalman参数：</strong></p>
+<script type="math/tex; mode=display">
+K_k = \frac{p_k^- H^T}{H p_k^- H^T + R}</script><p>推导过程不是很懂，思路可以参考温度计的例子</p>
+<p><img src="https://cdn.jsdelivr.net/gh/XYZinc-xyx/XYZinc-Images@master/blog/202207081341870.png" width="500"></p>
+<p>获取Kalman参数后，即可进行<strong>后验估计</strong>：</p>
+<script type="math/tex; mode=display">
+\hat{x}_k = \hat{x}_k^- + K_k(y_k - H \hat{x}_k^-)</script><h2 id="更新不确定性"><a href="#更新不确定性" class="headerlink" title="更新不确定性"></a>更新不确定性</h2><p>得到最终的预测值，便可以更新此次的不确定性：</p>
+<script type="math/tex; mode=display">
+p_k = (I - K_k H)p_k^-</script><h1 id="Kalman滤波过程"><a href="#Kalman滤波过程" class="headerlink" title="Kalman滤波过程"></a>Kalman滤波过程</h1><p>将上述推导得出的公式整合起来，就能得到Kalman滤波的过程</p>
+<ol>
+<li>先验状态估计</li>
+</ol>
+<script type="math/tex; mode=display">
+\hat{x}^-_{k} = A \hat{x}_{k-1} + B u_k</script><ol>
+<li>先验估计误差协方差</li>
+</ol>
+<script type="math/tex; mode=display">
+{p}^-_k = A p_{k-1} A^T + Q</script><ol>
+<li>计算Kalman增益</li>
+</ol>
+<script type="math/tex; mode=display">
+K_k = \frac{p_k^- H^T}{H p_k^- H^T + R}</script><ol>
+<li><p>后验状态估计</p>
+<script type="math/tex; mode=display">
+\hat{x}_k = \hat{x}_k^- + K_k(y_k - H \hat{x}_k^-)</script></li>
+<li><p>更新测量误差</p>
+</li>
+</ol>
+<script type="math/tex; mode=display">
+p_k = (I - K_k H)p_k^-</script><h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><ol>
+<li><p><strong>OpenCV自带的cv2.KalmanFilter</strong></p>
+<ul>
+<li><p>API</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cv::KalmanFilter::KalmanFilter(</span><br><span class="line">    <span class="built_in">int</span> dynamParams,  <span class="comment">## 状态维度 (pos, v)</span></span><br><span class="line">    <span class="built_in">int</span> measureParams,  <span class="comment">## 测量维度 (pos)</span></span><br><span class="line">    <span class="built_in">int</span> controlParams = <span class="number">0</span>,  <span class="comment">## 控制向量 (a)</span></span><br><span class="line">    <span class="built_in">int</span> <span class="built_in">type</span> = CV_32F  <span class="comment">## 数据类型</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">K_filter = cv2.KalmanFilter(state_num, measure_num, <span class="number">0</span>)</span><br><span class="line">K_filter.transitionMatrix	<span class="comment">## 转移矩阵 A</span></span><br><span class="line">K_filter.measurementMatrix  <span class="comment">## 测量矩阵 H</span></span><br><span class="line">K_filter.processNoiseCov	<span class="comment">## 系统误差 Q</span></span><br><span class="line">K_filter.measurementNoiseCov	<span class="comment">## 测量误差 R</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>预测 predict()</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">K_filter.predict()	<span class="comment">## 返回下一时刻预测值</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 函数介绍</span></span><br><span class="line">CV_EXPORTS const oclMat&amp; KalmanFilter::predict(const oclMat&amp; control)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">## gemm()为矩阵广义乘法</span></span><br><span class="line">    gemm(transitionMatrix, statePost, <span class="number">1</span>, oclMat(), <span class="number">0</span>, statePre);  <span class="comment">## x`_k = A * x_&#123;k - 1&#125;</span></span><br><span class="line">    oclMat temp;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(control.data)  <span class="comment">## 如果B非空</span></span><br><span class="line">        gemm(controlMatrix, control, <span class="number">1</span>, statePre, <span class="number">1</span>, statePre);  <span class="comment">## x`_k += B * u_k</span></span><br><span class="line">    gemm(transitionMatrix, errorCovPost, <span class="number">1</span>, oclMat(), <span class="number">0</span>, temp1);  <span class="comment">## tmp1 = A * p_&#123;k - 1&#125;</span></span><br><span class="line">    gemm(temp1, transitionMatrix, <span class="number">1</span>, processNoiseCov, <span class="number">1</span>, errorCovPre, GEMM_2_T);  <span class="comment">## p_k = tmp1 * A = A * p_&#123;k - 1&#125;*A^T + Q_k</span></span><br><span class="line">    statePre.copyTo(statePost);</span><br><span class="line">    <span class="keyword">return</span> statePre;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>更新（测量）  correct (measurement)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">K_filter.<span class="built_in">correct</span>(measurement)  <span class="comment">// 输入测量量（更新）</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数介绍</span></span><br><span class="line"><span class="function">CV_EXPORTS <span class="keyword">const</span> oclMat&amp; <span class="title">KalmanFilter::correct</span><span class="params">(<span class="keyword">const</span> oclMat&amp; measurement)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">CV_Assert</span>(measurement.<span class="built_in">empty</span>() == <span class="literal">false</span>);</span><br><span class="line">    <span class="built_in">gemm</span>(measurementMatrix, errorCovPre, <span class="number">1</span>, <span class="built_in">oclMat</span>(), <span class="number">0</span>, temp2);  <span class="comment">// tmp2 = H * p&#x27;</span></span><br><span class="line">    <span class="built_in">gemm</span>(temp2, measurementMatrix, <span class="number">1</span>, measurementNoiseCov, <span class="number">1</span>, temp3, GEMM_2_T);  <span class="comment">// tmp3 = tmp2 * H^T + R = H * p * H^T + R (K的分母)</span></span><br><span class="line">    Mat temp;</span><br><span class="line">    <span class="built_in">solve</span>(<span class="built_in">Mat</span>(temp3), <span class="built_in">Mat</span>(temp2), temp, DECOMP_SVD);  <span class="comment">// tmp = </span></span><br><span class="line">    temp4.<span class="built_in">upload</span>(temp);</span><br><span class="line">    gain = temp4.<span class="built_in">t</span>();</span><br><span class="line">    <span class="built_in">gemm</span>(measurementMatrix, statePre, <span class="number">-1</span>, measurement, <span class="number">1</span>, temp5);</span><br><span class="line">    <span class="built_in">gemm</span>(gain, temp5, <span class="number">1</span>, statePre, <span class="number">1</span>, statePost);</span><br><span class="line">    <span class="built_in">gemm</span>(gain, temp2, <span class="number">-1</span>, errorCovPre, <span class="number">1</span>, errorCovPost);</span><br><span class="line">    <span class="keyword">return</span> statePost;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="参数调整"><a href="#参数调整" class="headerlink" title="参数调整"></a>参数调整</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45751396/article/details/119595886?ops_request_misc=%7B%22request%5Fid%22%3A%22165656979216782184638870%22%2C%22scm%22%3A%2220140713.130102334.pc%5Fall.%22%7D&amp;request_id=165656979216782184638870&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~pc_rank_34-3-119595886-null-null.142^v26^pc_rank_34,157^v15^new_3&amp;utm_term=卡尔曼滤波+代码实现&amp;spm=1018.2226.3001.4187">STM32应用(六)一阶卡尔曼滤波代码和简单应用_三木今天学习了嘛的博客-CSDN博客_stm32卡尔曼滤波</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/37750839">卡尔曼滤波中关键参数的调整 - 知乎 (zhihu.com)</a></p>
+<ul>
+<li><p>过程噪声Q</p>
+<p>Q值为过程噪声，越小系统越容易收敛，我们对模型预测的值信任度越高；但是太小则容易发散，如果Q为零，那么我们只相信预测值；Q值越大我们对于预测的信任度就越低，而对测量值的信任度就变高；如果Q值无穷大，那么我们只信任测量值；</p>
+</li>
+<li><p>测量噪声R</p>
+<p>R值为测量噪声，太小太大都不一定合适。R太大，卡尔曼滤波响应会变慢，因为它对新测量的值的信任度降低；越小系统收敛越快，但过小则容易出现震荡；测试时可以保持陀螺仪不动，记录一段时间内陀螺仪的输出数据，这个数据近似正态分布，按3σ原则，取正态分布的(3σ)^2作为R的初始化值。</p>
+</li>
+</ul>
+<p>测试时可以先将Q从小往大调整，将R从大往小调整；先固定一个值去调整另外一个值，看收敛速度与波形输出。</p>
+<p>参考博客：</p>
+<ul>
+<li><p>卡曼滤波</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/moumde/article/details/107191722?ops_request_misc=&amp;request_id=&amp;biz_id=102&amp;utm_term=卡曼滤波&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-4-107191722.142">卡尔曼滤波通俗易懂的解释_moumde的博客-CSDN博客_什么是卡尔曼滤波</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/YOULANSHENGMENG/article/details/124929480">SLAM学习笔记——卡尔曼滤波详解_YOULANSHENGMENG的博客-CSDN博客_卡尔曼滤波</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ReadAir/article/details/107442359?ops_request_misc=%7B%22request%5Fid%22%3A%22165655130216780366582209%22%2C%22scm%22%3A%2220140713.130102334..%22%7D&amp;request_id=165655130216780366582209&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-5-107442359-null-null.142^v26^pc_rank_34,157^v15^new_3&amp;utm_term=卡尔曼滤波&amp;spm=1018.2226.3001.4187">【工程师学算法】工程常用算法（二）—— 卡尔曼滤波(Kalman Filter)_ReadAir的博客-CSDN博客_卡尔曼滤波 知乎</a></p>
+</li>
+<li><p>OpenCV</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/GDFSG/article/details/50904811">学习OpenCV2——卡尔曼滤波(KalmanFilter)详解_Markala的博客-CSDN博客_kalmanfilter opencv</a></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/" rel="tag"># 卡尔曼滤波</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/03/29/MySQL%E5%AE%89%E8%A3%85%E6%B5%81%E7%A8%8B/" rel="prev" title="MySQL安装流程">
+      <i class="fa fa-chevron-left"></i> MySQL安装流程
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">导入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%97%E5%AD%90"><span class="nav-number">1.1.</span> <span class="nav-text">栗子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%A6%E4%B8%80%E4%B8%AA%E6%A0%97%E5%AD%90"><span class="nav-number">1.2.</span> <span class="nav-text">另一个栗子</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E6%8E%A8%E5%AF%BC"><span class="nav-number">2.</span> <span class="nav-text">公式推导</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E7%8A%B6%E6%80%81%E5%80%BC"><span class="nav-number">2.1.</span> <span class="nav-text">如何获取状态值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E9%A2%84%E6%B5%8B%E5%80%BC%E7%9A%84%E4%B8%8D%E7%A1%AE%E5%AE%9A%E6%80%A7"><span class="nav-number">2.2.</span> <span class="nav-text">如何获取预测值的不确定性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E4%BA%8E%E4%BC%B0%E8%AE%A1%E5%80%BC"><span class="nav-number">2.2.1.</span> <span class="nav-text">对于估计值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E4%BA%8E%E6%B5%8B%E9%87%8F%E5%80%BC"><span class="nav-number">2.2.2.</span> <span class="nav-text">对于测量值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96Kalman%E5%A2%9E%E7%9B%8A%EF%BC%88%E5%8F%82%E6%95%B0K%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">如何获取Kalman增益（参数K）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E4%B8%8D%E7%A1%AE%E5%AE%9A%E6%80%A7"><span class="nav-number">2.4.</span> <span class="nav-text">更新不确定性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kalman%E6%BB%A4%E6%B3%A2%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">Kalman滤波过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E8%B0%83%E6%95%B4"><span class="nav-number">4.1.</span> <span class="nav-text">参数调整</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="XYZinc"
+      src="/images/XYZinc.png">
+  <p class="site-author-name" itemprop="name">XYZinc</p>
+  <div class="site-description" itemprop="description">⁽⁽ଘ( ˙꒳˙ )ଓ⁾⁾</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/XYZinc-xyx" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;XYZinc-xyx" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/XYZinc/" title="cnblogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;XYZinc&#x2F;" rel="noopener" target="_blank"><i class="fa fa-compass fa-fw"></i>cnblogs</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      friend_links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dextertyw.github.io/" title="https:&#x2F;&#x2F;dextertyw.github.io&#x2F;" rel="noopener" target="_blank">Tyw_ei</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://anoxiacxy.github.io/" title="https:&#x2F;&#x2F;anoxiacxy.github.io&#x2F;" rel="noopener" target="_blank">Anoxiacxy</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://skylark1003.gitee.io/" title="https:&#x2F;&#x2F;skylark1003.gitee.io&#x2F;" rel="noopener" target="_blank">Skylark</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XYZinc</span>
+</div>
+
+
+<!-- 底部的强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
